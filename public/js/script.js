@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //文件列表的生成及填充
 var fileList = document.getElementById("file-list");
-var fileInput = document.getElementById("file-input");
 var xhr = new XMLHttpRequest();
 xhr.open("GET", "/WHR-HFS-API/Files-list", true);
 xhr.onreadystatechange = function () {
@@ -33,18 +32,27 @@ xhr.onreadystatechange = function () {
       var span = document.createElement("span");
 
       a.href = "/WHR-HFS-API/Download/" + file.name;
-      a.target = "_blank";
-      a.style.display = "block"; // 设置display属性为block，使其整个方框可点击
+      a.style.display = "block";
       a.innerHTML = file.name;
+      a.addEventListener("click", function (event) {
+        event.preventDefault(); // 阻止默认行为
+        window.open(a.href, "_blank"); // 在新标签页中打开链接
+      });
 
       // 转换文件大小为MB并四舍五入到小数点后两位
       var fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
       // 显示文件大小
       if (!file.isDirectory) {
-        span.innerHTML = "文件大小：" + fileSizeInMB + " MB";
+        span.innerHTML = " 文件大小：" + fileSizeInMB + " MB";
       } else {
         span.innerHTML = " 文件夹";
       }
+
+      // 添加点击事件
+      li.addEventListener("click", function () {
+        var downloadUrl = "/WHR-HFS-API/Download/" + file.name;
+        window.open(downloadUrl, "_blank");
+      });
 
       // 使用 Bootstrap v5 的列表组件样式来显示文件列表
       li.classList.add("list-group-item", "list-group-item-action");
