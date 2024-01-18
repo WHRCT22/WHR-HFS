@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6",
+    "multer": "^1.4.5-lts.1",
+    "pkg": "^5.8.1",
+    "ws": "^8.15.1"
+  },
+  "scripts": {
+    "pkg": "pkg . --out-path=dist/",
+    "start": "node app.js"
+  },
+  "name": "WHRSTUDIO文件服务器-[NodeJS]-Windows交叉编译版",
+  "bin": "app.js",
+  "version": "1.2.0",
+  "description": "一个局域网传输文件软件与聊天软件",
+  "main": "./app.js",
+  "pkg": {
+    "assets": [
+      "public/**/*"
+    ],
+    "targets": [
+      "node12-win-x64"
+    ],
+    "outputPath": "Dist"
+  }
+}
