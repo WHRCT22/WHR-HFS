@@ -120,3 +120,18 @@ function connectWebSocket() {
   }
 }
 connectWebSocket();
+
+document.querySelector(".form-control").addEventListener("input", function () {
+  var input, filter, ul, li, a, i, txtValue;
+  input = this.value.toLowerCase();
+  ul = document.getElementById("file-list");
+  li = ul.getElementsByTagName("li");
+  for (i = 0; i < li.length; i++) {
+    a = li[i].innerText.toLowerCase();
+    if (a.indexOf(input) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
+  }
+});
