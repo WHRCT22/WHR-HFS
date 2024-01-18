@@ -42,7 +42,8 @@ xhr.onreadystatechange = function () {
       } else {
         span.innerHTML = " 文件夹";
       }
-
+      span.style.color = "darkgray";
+      span.style.fontWeight = "bold";
       // 添加点击事件
       li.addEventListener("click", function () {
         var downloadUrl = "/WHR-HFS-API/Download/" + file.name;
