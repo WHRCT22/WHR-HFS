@@ -31,13 +31,9 @@ xhr.onreadystatechange = function () {
       var a = document.createElement("a");
       var span = document.createElement("span");
 
-      a.href = "/WHR-HFS-API/Download/" + file.name;
+      a.href = "#" + file.name;
       a.style.display = "block";
       a.innerHTML = file.name;
-      a.addEventListener("click", function (event) {
-        event.preventDefault(); // 阻止默认行为
-        window.open(a.href, "_blank"); // 在新标签页中打开链接
-      });
 
       // 转换文件大小为MB并四舍五入到小数点后两位
       var fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
