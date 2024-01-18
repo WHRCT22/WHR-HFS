@@ -1,7 +1,6 @@
-//发送按钮的执行操作（空文件时按钮状态及操作等等）
 document.addEventListener("DOMContentLoaded", function () {
   var fileInput = document.querySelector('input[type="file"]');
-  var submitButton = document.querySelector('input[type="submit"]');
+  var submitButton = document.querySelector('button[type="submit"]');
 
   fileInput.addEventListener("change", function () {
     if (fileInput.files.length > 0) {
