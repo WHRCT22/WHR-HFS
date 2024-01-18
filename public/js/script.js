@@ -17,48 +17,53 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+function generateFileList() {
+  //文件列表的生成及填充
+  var fileList = document.getElementById("file-list");
+  fileList.innerHTML = "";
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/WHR-HFS-API/Files-list", true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var data = JSON.parse(xhr.responseText);
+      data.files.forEach(function (file) {
+        var li = document.createElement("li");
+        var a = document.createElement("a");
+        var span = document.createElement("span");
 
-//文件列表的生成及填充
-var fileList = document.getElementById("file-list");
-var xhr = new XMLHttpRequest();
-xhr.open("GET", "/WHR-HFS-API/Files-list", true);
-xhr.onreadystatechange = function () {
-  if (xhr.readyState === 4 && xhr.status === 200) {
-    var data = JSON.parse(xhr.responseText);
-    data.files.forEach(function (file) {
-      var li = document.createElement("li");
-      var a = document.createElement("a");
-      var span = document.createElement("span");
+        a.href = "#" + file.name;
+        a.style.display = "block";
+        a.innerHTML = file.name;
 
-      a.href = "#" + file.name;
-      a.style.display = "block";
-      a.innerHTML = file.name;
+        // 转换文件大小为MB并四舍五入到小数点后两位
+        var fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
+        // 显示文件大小
+        if (!file.isDirectory) {
+          span.innerHTML = " 文件大小：" + fileSizeInMB + " MB";
+        } else {
+          span.innerHTML = " 文件夹";
+        }
+        span.style.color = "darkgray";
+        span.style.fontWeight = "bold";
+        // 添加点击事件
+        li.addEventListener("click", function () {
+          var downloadUrl = "/WHR-HFS-API/Download/" + file.name;
+          window.open(downloadUrl, "_blank");
+        });
 
-      // 转换文件大小为MB并四舍五入到小数点后两位
-      var fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
-      // 显示文件大小
-      if (!file.isDirectory) {
-        span.innerHTML = " 文件大小：" + fileSizeInMB + " MB";
-      } else {
-        span.innerHTML = " 文件夹";
-      }
-      span.style.color = "darkgray";
-      span.style.fontWeight = "bold";
-      // 添加点击事件
-      li.addEventListener("click", function () {
-        var downloadUrl = "/WHR-HFS-API/Download/" + file.name;
-        window.open(downloadUrl, "_blank");
+        // 使用 Bootstrap v5 的列表组件样式来显示文件列表
+        li.classList.add("list-group-item", "list-group-item-action");
+
+        li.appendChild(a);
+        li.appendChild(span);
+        fileList.appendChild(li);
       });
-
-      // 使用 Bootstrap v5 的列表组件样式来显示文件列表
-      li.classList.add("list-group-item", "list-group-item-action");
-
-      li.appendChild(a);
-      li.appendChild(span);
-      fileList.appendChild(li);
-    });
-  }
-};
+    }
+  };
+  xhr.send();
+}
+// 每隔一秒自动刷新文件列表
+setInterval(generateFileList, 60000);
 
 // 生成二维码及定义生成的信息和大小
 var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -66,8 +71,6 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
   width: 150,
   height: 150,
 });
-
-xhr.send();
 
 document.querySelector(".form-control").addEventListener("input", function () {
   var input, filter, ul, li, a, i, txtValue;
