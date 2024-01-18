@@ -69,54 +69,6 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 
 xhr.send();
 
-//Websocket文字刷新
-let socket;
-let connectionOpen = false;
-
-function connectWebSocket() {
-  if (!connectionOpen) {
-    const currentUrl = new URL(window.location.href);
-    const wsProtocol = currentUrl.protocol === "https:" ? "wss:" : "ws:";
-    const newUrl = `${wsProtocol}//${currentUrl.host}/websocket`;
-    socket = new WebSocket(newUrl);
-
-    const connectionTimeout = setTimeout(function () {
-      if (socket.readyState !== WebSocket.OPEN) {
-        console.log("服务器已离线");
-        socket.close();
-      }
-    }, 3000);
-
-    function updateConnectionStatus(status) {
-      const statusElement = document.getElementById("status");
-      statusElement.textContent = status;
-
-      if (status === "服务器状态：在线") {
-        statusElement.style.color = "green";
-      } else {
-        statusElement.style.color = "red";
-      }
-    }
-
-    socket.addEventListener("open", function () {
-      console.log("服务器已上线");
-      connectionOpen = true;
-      updateConnectionStatus("服务器状态：在线");
-      clearTimeout(connectionTimeout); // 清除连接超时定时器
-    });
-    socket.addEventListener("close", function (event) {
-      console.log("服务器已离线，正在重连");
-      connectionOpen = false;
-      updateConnectionStatus("服务器状态：离线");
-      // 尝试重新连接
-      setTimeout(function () {
-        connectWebSocket(); // 再次尝试连接
-      }, 500);
-    });
-  }
-}
-connectWebSocket();
-
 document.querySelector(".form-control").addEventListener("input", function () {
   var input, filter, ul, li, a, i, txtValue;
   input = this.value.toLowerCase();
