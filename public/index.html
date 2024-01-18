@@ -13,15 +13,12 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <title>WHR-HFS文件中心</title>
     <style>
-body {
-  cursor: url('normal.cur'), auto;
-}
-.error-message {
-      color: #dc3545;
-    }
-a:hover {
-  cursor: url('ahover.cur'), auto;
-}
+     body {
+         cursor: url('normal.cur'), auto;
+          },
+     a:hover {
+         cursor: url('ahover.cur'), auto;
+          }
 </style>
 </head>
 <body>
@@ -42,13 +39,11 @@ a:hover {
     <center>
         <div><font color="black" id="status">连接中...</font></div>
         </center>
-    
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <ul id="file-list" class="list-group"></ul>
             </div>
         </div>
-
         <div class="row mt-5">
             <div class="col-md-6 offset-md-3">
                 <form action="/WHR-HFS-API/Upload" method="post" enctype="multipart/form-data">
