@@ -38,17 +38,17 @@ a:hover {
         <div id="qrcode" class="d-flex justify-content-center"></div>
         <p class="text-center">扫码访问此网站</p>
         <h1 class="text-center mb-5">WHR-HFS文件中心</h1>
-
-
+    </div>
+    <center>
+        <div><font color="black" id="status">连接中...</font></div>
+        </center>
+    
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <ul id="file-list" class="list-group"></ul>
             </div>
         </div>
-    <script src="js/qrcode.min.js"></script>
-    <script src="js/script.js"></script>
 
-    <center>
         <div class="row mt-5">
             <div class="col-md-6 offset-md-3">
                 <form action="/WHR-HFS-API/Upload" method="post" enctype="multipart/form-data">
@@ -61,20 +61,10 @@ a:hover {
                 </form>
             </div>
         </div>
-        <div><font color="black" id="status">连接中...</font></div>
-    </center>
     <footer class="text-center mt-3">
         <a href="/about" target="_blank">About页面</a> 或者 <a href="/chat" target="_blank">聊天室</a>
     </footer>
-    
-        
-    <div class="container mt-5">
-        <div class="row">
-          <div class="col-12">
-            <div id="ip-address" class="alert alert-info"></div>
-            <div id="error-message" class="error-message mt-2"></div>
-          </div>
-        </div>
-      </div>
 </body>
+<script src="js/qrcode.min.js"></script>
+<script src="js/script.js"></script>
 </html>
