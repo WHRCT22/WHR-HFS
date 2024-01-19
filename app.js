@@ -47,16 +47,16 @@ if (messageHistory.length > 0) {
 });
     });
 });
-//定义上传文件目录(此变量具有全局通用性)
+//定义上传文件目录
 const uploadfolder= 'Uploads'
 
 const uploadPath = path.join(process.cwd(), `${uploadfolder}`);
 
-// 创建 Express 应用
+// 初始 Express 应用
 const app = express();
 // console.log('');
 
-// 设置静态资源路径(嵌入到程序内部故直接使用dir__dirname方法)
+// 设置静态资源Base路径
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 获取文件列表路由
@@ -74,7 +74,7 @@ app.get('/WHR-HFS-API/Files-list', (req, res) => {
             size: stats.size,
             isDirectory: stats.isDirectory()
         };
-
+        // 将fileData推送至fileList
         fileList.push(fileData);
     });
 
