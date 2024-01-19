@@ -178,7 +178,7 @@ app.use(`${websocketurl}`, createProxyMiddleware({
 }));
 
 // 启动服务端口
-const port = 11452
+const port = 80
 // 显示部分
 app.listen({port}, '0.0.0.0', () => {
     console.log(`
