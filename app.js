@@ -1,4 +1,4 @@
-﻿// 模块引入
+// 模块引入
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -20,7 +20,6 @@ wss.on('connection', function connection(ws, req) {
     // 首先发送一条包含“你在线了”的JSON信息给新连接的客户端
     ws.send(JSON.stringify("欢迎加入聊天室！"));
 
-    // 逐条发送messageHistory包含的数组给新连接的客户端
 // 逐条发送messageHistory包含的数组给新连接的客户端，包含用户IP地址
 if (messageHistory.length > 0) {
   messageHistory.forEach(message => {
@@ -28,6 +27,28 @@ if (messageHistory.length > 0) {
     ws.send(messageStringWithIP);
   });
 }
+
+const filename = 'index.html';
+let fileLastModifiedTime = 0;
+
+// 定时检查文件变化，并向客户端发送刷新消息
+setInterval(() => {
+  fs.stat(filename, (err, stats) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    if (stats.mtimeMs > fileLastModifiedTime) {
+      fileLastModifiedTime = stats.mtimeMs;
+      wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send('refresh');
+        }
+      });
+    }
+  });
+}, 1000);
+
     //此处定义了WS客户端发送信息时的操作
     ws.on('message', function incoming(message) {
       console.log(`[WS用户 \x1b[32m${clientIP}\x1b[0m]: \x1b[33m${message}\x1b[0m
