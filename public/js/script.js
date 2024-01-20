@@ -68,16 +68,27 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 });
 
 document.querySelector(".form-control").addEventListener("input", function () {
-  var input, filter, ul, li, a, i, txtValue;
+  var input, ul, li, a, i, txtValue, resultsFound;
   input = this.value.toLowerCase();
   ul = document.getElementById("file-list");
   li = ul.getElementsByTagName("li");
+  resultsFound = false;
+
   for (i = 0; i < li.length; i++) {
     a = li[i].innerText.toLowerCase();
     if (a.indexOf(input) > -1) {
       li[i].style.display = "";
+      resultsFound = true;
     } else {
       li[i].style.display = "none";
     }
+  }
+
+  // 根据搜索结果状态来显示或隐藏提示信息
+  var noResultsElement = document.getElementById("no-results");
+  if (resultsFound) {
+    noResultsElement.style.display = "none";
+  } else {
+    noResultsElement.style.display = "block";
   }
 });
