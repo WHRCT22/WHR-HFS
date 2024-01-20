@@ -92,3 +92,24 @@ document.querySelector(".form-control").addEventListener("input", function () {
     noResultsElement.style.display = "block";
   }
 });
+
+// 建立 WebSocket 连接
+                const currentUrl = new URL(window.location.href);
+                const wsProtocol = currentUrl.protocol === 'https:' ? 'wss:' : 'ws:';
+                const newUrl = `${wsProtocol}//${currentUrl.host}/websocket`;
+                var ws = new WebSocket(newUrl);
+
+// 监听 WebSocket 连接打开事件
+ws.onopen = function () {
+  console.log('WebSocket 连接已打开');
+};
+
+// 监听从服务器接收消息的事件
+ws.onmessage = function (event) {
+  var message = event.data;
+  if (message === 'refresh') {
+    if (confirm('页面已更新，是否刷新？')) {
+      location.reload();
+    }
+  }
+};
