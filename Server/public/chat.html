@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WHR-HFS官方网站，文件上传网站，免费公共的文件上传网站">
+    <meta name="keywords" content="WHR-HFS，聊天，上传，文件直链，免费">
+    <meta name="author" content="WHRSTUDIO(王浩瑞)">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WHR-HFS聊天室</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">HFS聊天室</h1>
+        <p class="text-muted text-center">连接状态: <span id="status">未连接</span></p>
+        <div id="chat-messages"></div>
+        <div class="input-group mb-3">
+            <input type="text" id="message-input" class="form-control" placeholder="在这里输入消息">
+            <button onclick="sendMessage()" class="btn btn-primary">发送</button>
+        </div>
+        <div class="text-center">
+            <a href="/" class="link-secondary">返回</a>
+        </div>
+    </div>
+    <script>
+        let socket;
+        let connectionOpen = false;
+
+        function connectWebSocket() {
+            if (!connectionOpen) {
+                const currentUrl = new URL(window.location.href);
+                const wsProtocol = currentUrl.protocol === 'https:' ? 'wss:' : 'ws:';
+                const newUrl = `${wsProtocol}//${currentUrl.host}/wschat`;
+                socket = new WebSocket(newUrl);
+
+                const connectionTimeout = setTimeout(function () {
+                    if (socket.readyState !== WebSocket.OPEN) {
+                        console.log('WebSocket连接超时，连接失败');
+                        socket.close();
+                    }
+                }, 3000);
+
+                function updateConnectionStatus(status) {
+                    const statusElement = document.getElementById('status');
+                    statusElement.textContent = status;
+                }
+
+                socket.addEventListener('open', function () {
+                    console.log('WebSocket连接已建立');
+                    connectionOpen = true;
+                    updateConnectionStatus('WebSocket连接已建立');
+                    clearTimeout(connectionTimeout); // 清除连接超时定时器
+                });
+
+                socket.addEventListener('message', function (event) {
+                    const message = event.data;
+                    const chatMessages = document.getElementById('chat-messages');
+                    const messageElement = document.createElement('p');
+                    messageElement.textContent = message;
+                    chatMessages.appendChild(messageElement);
+                });
+
+                socket.addEventListener('close', function (event) {
+                    console.log('WebSocket连接已关闭，尝试重新连接');
+                    connectionOpen = false;
+                    updateConnectionStatus('WebSocket连接失败，正在重新连接...');
+                    // 尝试重新连接
+                    setTimeout(function () {
+                        connectWebSocket(); // 再次尝试连接
+                    }, 500);
+                });
+            }
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+            if (message.trim() !== '') {
+                messageInput.value = '';
+                socket.send(message);
+            }
+        }
+
+        const messageInput = document.getElementById('message-input');
+        messageInput.addEventListener('keyup', function (event) {
+            if (event.keyCode === 13) {
+                sendMessage();
+            }
+        });
+
+        connectWebSocket();
+    </script>
+</body> 
+</html>
