@@ -44,4 +44,4 @@ app.listen({port}, '0.0.0.0', () => {
 ##### WHRSTUDIO
 ##### WZH-Team
 ## License
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
