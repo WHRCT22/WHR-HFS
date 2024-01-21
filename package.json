@@ -8,7 +8,8 @@
   },
   "scripts": {
     "pkg": "pkg . --out-path=dist/",
-    "start": "npm install && node app.js"
+    "start": "npm install && node app.js",
+    "zip": "zip -r WHR-HFS.zip . -x \"node_modules/*\" \"Uploads/*\" \"dist/*\" \".git/*\""
   },
   "name": "WHRSTUDIO文件服务器-[NodeJS]-Windows交叉编译版",
   "bin": "app.js",
