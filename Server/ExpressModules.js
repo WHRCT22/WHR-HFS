@@ -84,8 +84,11 @@ const storage = multer.diskStorage({
     console.log('\x1b[32m[', req.headers['x-forwarded-for'] || req.connection.remoteAddress, ']\x1b[0m\x1b[37m POST \x1b[33m', req.files.map(file => `${file.originalname}`).join(', '), '\x1b[0m');
     console.log(``);
 
-    res.redirect('/');
-  });
+  //获取上传成功的文件名
+  const uploadedFiles = req.files.map(file => `${file.originalname}`).join(', ');
+  //返回文件名+上传成功的信息
+  res.send(`${uploadedFiles} 上传成功！`);
+});
 
 // 下载文件路由
 app.get('/WHR-HFS-API/Download/:file', (req, res) => {
