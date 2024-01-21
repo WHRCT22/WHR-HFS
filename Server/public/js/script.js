@@ -1,12 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  if (Notification.permission !== "granted") {
-    Notification.requestPermission().then(function (permission) {
-      if (permission === "granted") {
-        console.log("Notification permission has been granted");
-      }
-    });
-  }
+  document.addEventListener("click", function() {
+    setTimeout(function() {
+      Notification.requestPermission().then(function (permission) {
+        // 如果用户同意授权
+        if (permission === "granted") {
+          // 显示通知
+          var notification = new Notification("WHR-HFS授权通知权限", {
+            body: "您已成功授权[通知]权限",
+            icon: "favicon.ico", // 修改为相应的图片文件路径
+            sound: "sound/notification_sound.wav" // 替换为您希望使用的提示音文件路径
+          });
+        }
+      });
+    }, 500); // 延迟 500 毫秒再显示通知请求
+  });
 
   var fileInput = document.querySelector('input[type="file"]');
   var submitButton = document.querySelector('button[type="submit"]');
