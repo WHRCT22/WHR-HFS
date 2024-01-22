@@ -19,28 +19,35 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 获取文件列表路由
 app.get('/WHR-HFS-API/Files-list', (req, res) => {
-    const uploadPath = path.join(process.cwd(), `${uploadfolder}`);
-    const files = fs.readdirSync(uploadPath);
-    const fileList = [];
+  const pageNumber = parseInt(req.query.page) || 1;
+  const pageSize = 10;
+  const uploadPath = path.join(process.cwd(), `${uploadfolder}`);
+  const files = fs.readdirSync(uploadPath);
+  const totalFiles = files.length;
+  const totalPages = Math.ceil(totalFiles / pageSize);
 
-    files.forEach((file) => {
-        const filePath = path.join(uploadPath, file);
-        const stats = fs.statSync(filePath);
+  const startIndex = (pageNumber - 1) * pageSize;
+  const endIndex = pageNumber * pageSize;
+  const fileList = [];
 
-        const fileData = {
-            name: file,
-            size: stats.size,
-            isDirectory: stats.isDirectory()
-        };
-        // 将fileData推送至fileList
-        fileList.push(fileData);
-    });
+  files.slice(startIndex, endIndex).forEach((file) => {
+      const filePath = path.join(uploadPath, file);
+      const stats = fs.statSync(filePath);
 
-    res.json({
-        success: true,
-        warn: false,
-        files: fileList
-    });
+      const fileData = {
+          name: file,
+          size: stats.size,
+          isDirectory: stats.isDirectory()
+      };
+      fileList.push(fileData);
+  });
+
+  res.json({
+      success: true,
+      warn: false,
+      files: fileList,
+      totalPages: totalPages // 将 totalPages 作为局部变量返回给前端
+  });
 });
 
 // 下载页面路由

@@ -37,53 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-//文件列表刷新
-function refreshFileList() {
-var fileList = document.getElementById("file-list");
-var xhr = new XMLHttpRequest();
-xhr.open("GET", "/WHR-HFS-API/Files-list", true);
-xhr.onreadystatechange = function () {
-  if (xhr.readyState === 4 && xhr.status === 200) {
-    var data = JSON.parse(xhr.responseText);
-    fileList.innerHTML = ''; // 清空
-    data.files.forEach(function (file) {
-      var li = document.createElement("li");
-      var a = document.createElement("a");
-      var span = document.createElement("span");
-
-      a.href = "#" + file.name;
-      a.style.display = "block";
-      a.innerHTML = file.name;
-
-      // 转换文件大小为MB并四舍五入到小数点后两位
-      var fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
-      // 显示文件大小
-      if (!file.isDirectory) {
-        span.innerHTML = " 文件大小：" + fileSizeInMB + " MB";
-      } else {
-        span.innerHTML = " 文件夹";
-      }
-      span.style.color = "darkgray";
-      span.style.fontWeight = "bold";
-      // 添加点击事件
-      li.addEventListener("click", function () {
-        var downloadUrl = "/WHR-HFS-API/Download/" + file.name;
-        window.open(downloadUrl, "_blank");
-      });
-
-      // 使用 Bootstrap v5 的列表组件样式来显示文件列表
-      li.classList.add("list-group-item", "list-group-item-action");
-
-      li.appendChild(a);
-      li.appendChild(span);
-      fileList.appendChild(li);
-    });
-  }
-};
-xhr.send();
-}
-refreshFileList();
-
 // 文件上传
 var form = document.querySelector('form[action="/WHR-HFS-API/Upload"]');
 var fileInput = document.querySelector('input[type="file"]');
@@ -112,9 +65,6 @@ form.addEventListener("submit", function (event) {
     // 移除文件名 + 正在上传...的文本
     fileUploadStatus.innerHTML = '';
 
-
-  // 文件上传成功，调用获取文件列表的函数刷新文件列表
-  refreshFileList();
 
 // 请求弹窗通知权限
 if (Notification.permission === "granted") {
@@ -220,5 +170,121 @@ document.querySelector(".form-control").addEventListener("input", function () {
     noResultsElement.style.display = "none";
   } else {
     noResultsElement.style.display = "block";
+  }
+});
+
+
+
+var currentPageNumber = 1; // 当前页码
+
+function refreshFileList(pageNumber) {
+  var fileList = document.getElementById("file-list");
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/WHR-HFS-API/Files-list?page=" + pageNumber, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var data = JSON.parse(xhr.responseText);
+      fileList.innerHTML = '';
+      if (data.files.length === 0) {
+        // 如果文件列表为空，显示消息
+        var noResultsMessage = document.createElement('div');
+        noResultsMessage.classList.add("error-message");
+        noResultsMessage.innerHTML = '此列表是空的';
+        fileList.appendChild(noResultsMessage);
+      } else {
+        // 遍历文件列表，创建相应的链接和元素
+        data.files.forEach(function (file) {
+          var li = document.createElement("li");
+          var a = document.createElement("a");
+          var span = document.createElement("span");
+
+          a.href = "/WHR-HFS-API/Download/" + file.name;
+          a.style.display = "block";
+          a.innerHTML = file.name;
+
+          var fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
+
+          if (!file.isDirectory) {
+            span.innerHTML = " 文件大小：" + fileSizeInMB + " MB";
+          } else {
+            span.innerHTML = " 文件夹";
+          }
+          span.style.color = "darkgray";
+          span.style.fontWeight = "bold";
+          
+          a.addEventListener("click", function (event) {
+            event.preventDefault();
+            window.open(a.href, "_blank");
+          });
+
+          li.classList.add("list-group-item", "list-group-item-action");
+        
+          li.appendChild(a);
+          li.appendChild(span);
+          fileList.appendChild(li);
+        });
+      }
+
+      // 更新当前页码
+      currentPageNumber = pageNumber;
+
+      // 从JSON数据中获取totalPages
+      totalPages = data.totalPages;
+
+      // 渲染分页
+      renderPagination();
+    }
+  };
+  xhr.send();
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  refreshFileList(currentPageNumber); // 显示第一页的文件列表
+});
+
+function renderPagination() {
+  var paginationElement = document.getElementById('pagination');
+  var paginationHtml = "";
+  for (var i = 1; i <= totalPages; i++) {
+    // 渲染分页按钮
+    if (i === currentPageNumber) {
+      paginationHtml += '<li class="page-item active"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+    } else {
+      paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+    }
+  }
+  paginationElement.innerHTML = '<li class="page-item" id="previous-page"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>' + paginationHtml + '<li class="page-item" id="next-page"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
+  bindPageNavigation();
+}
+
+function bindPageNavigation() {
+  var paginationElement = document.getElementById('pagination');
+  var pageLinks = paginationElement.querySelectorAll('.page-link');
+  pageLinks.forEach(function(link) {
+    // 绑定分页按钮点击事件
+    link.addEventListener('click', function(event) {
+      event.preventDefault();
+      var newPage = parseInt(this.getAttribute('data-page'));
+      refreshFileList(newPage);
+    });
+  });
+}
+
+var previousPageButton = document.getElementById('previous-page');
+var nextPageButton = document.getElementById('next-page');
+
+previousPageButton.addEventListener('click', function(event) {
+  event.preventDefault();
+  // 点击上一页按钮事件处理
+  if (currentPageNumber > 1) {
+    refreshFileList(currentPageNumber - 1);
+  }
+});
+
+nextPageButton.addEventListener('click', function(event) {
+  event.preventDefault();
+  // 点击下一页按钮事件处理
+  if (currentPageNumber < totalPages) {
+    refreshFileList(currentPageNumber + 1);
   }
 });
