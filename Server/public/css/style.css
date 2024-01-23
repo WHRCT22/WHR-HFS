@@ -1,0 +1,27 @@
+@font-face {
+    font-family:"ZCOOLXiaoWei";
+    src:url("/files/ZCOOLXiaoWei-Regular.ttf") format("truetype");
+}
+* {
+    margin:0;
+    padding:0;
+    line-height:1.8;
+    letter-spacing:1.4px;
+    overflow-wrap:break-word;
+    outline:none;
+    color:#444;
+    font-family:"ZCOOLXiaoWei";
+    tab-size:4;
+    -moz-tab-size:4;
+    -o-tab-size:4;
+    scroll-behavior:smooth;
+    text-underline-position:under;
+}
+
+body {
+    font-size:17px;
+}
+h2 {
+    font-size:2.25em;
+    margin-top:1em;
+}
