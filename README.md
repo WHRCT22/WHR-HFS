@@ -24,7 +24,7 @@ Once the server is running, you can access the functionality using the following
 ## Web UI
 ![WHR-HFS](image/web.png)
 ## Chat room UI
-![WHR-HFS](image/cmd.png)
+![WHR-HFS](image/chat.png)
 ## Example
 ```javascript
 // Start the application
