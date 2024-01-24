@@ -12,12 +12,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link rel="preload" href="/files/ZCOOLXiaoWei-Regular.woff2" as="font" type="font/woff2" crossorigin>
     <script src="js/bootstrap.min.js"></script>
-    <title>WHR-HFS文件中心</title>
+    <title>WHR-FileShareHub</title>
     <style>
-    .badge.bg-success {
-    background-color: green;
-  }
+  .badge.bg-success {
+  background-color: green;
+}
   .error-message {
   background-color: #f8d7da; /* 设置背景颜色 */
   color: #721c24; /* 设置文字颜色 */
@@ -32,7 +33,10 @@
   background-color: #007bff; /* 设置激活状态下的背景颜色 */
   border-color: #007bff; /* 设置激活状态下的边框颜色 */
 }
-</style>
+#error-message {
+  display: none;
+}
+    </style>
 
 </head>
 <body>
@@ -40,8 +44,8 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
-                    <img src="favicon.ico" alt="icon"> WHR-HFS文件中心
-                    <span class="badge bg-success">公网部署版本</span>
+                    <img src="favicon.ico" alt="icon"> WHR-HFS首页
+                    <span class="badge bg-success">公共网络</span>
                 </a>
             </div>
         </nav>
@@ -63,7 +67,7 @@
         </div>
     </div>
     <div id="no-results" class="text-center mt-3" style="display: none;">
-        抱歉，未在此目录找到包含指定文件名的文件 [Doge]
+        抱歉，未在此页找到包含指定文件名的文件 [Doge]
       </div>
         <div class="row">
             <div class="col-md-6 offset-md-3">
@@ -72,7 +76,6 @@
             </div>
         </div>
 
-   <!-- 分页 -->
 <div class="pagination-container mt-3 mb-3">
     <nav aria-label="Page navigation">
         <ul id="pagination" class="pagination justify-content-center">
@@ -81,7 +84,6 @@
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
-          <!-- 分页按钮将在此动态生成 -->
           <li class="page-item" id="next-page">
             <a class="page-link" href="#" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
@@ -96,10 +98,11 @@
             <div class="col-md-6 offset-md-3">
                 <form action="/WHR-HFS-API/Upload" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <input class="form-control" type="file" name="file" multiple>
+                        <input class="form-control" type="file" id ="filesinputupload" name="file" multiple>
                     </div>
+                    <div id="error-message" class="alert alert-danger" role="alert"></div>
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-primary" disabled>
+                        <button type="submit" class="btn btn-primary">
                             <img src="svg/cloud-upload.svg" alt="文件图标" width="16" height="16" style="filter: invert(1);"/>
                             上传文件
                           </button>

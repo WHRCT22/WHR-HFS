@@ -94,7 +94,7 @@ const storage = multer.diskStorage({
   //获取上传成功的文件名
   const uploadedFiles = req.files.map(file => `${file.originalname}`).join(', ');
   //返回文件名+上传成功的信息
-  res.send(`${uploadedFiles} 上传成功！`);
+  res.send(`您的文件 "${uploadedFiles}" 已成功上传至WHR-HFS`);
 });
 
 // 下载文件路由
