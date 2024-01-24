@@ -26,12 +26,6 @@ To install and run the WHR-HFS server, follow these steps:
 - 通知和权限
 - 更多
 
-## Usage
-Once the server is running, you can access the functionality using the following endpoints:
-
-- File Upload: `/WHR-HFS-API/Upload` [POST]
-- File List: `/WHR-HFS-API/Files-list` [GET]
-- File Download: `/WHR-HFS-API/Download/{filename}` [GET]
 ## Web UI
 ![WHR-HFS](image/web.png)
 ## Chat room UI
