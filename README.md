@@ -21,7 +21,8 @@ Once the server is running, you can access the functionality using the following
 - File Upload: `/WHR-HFS-API/Upload`
 - File List: `/WHR-HFS-API/Files-list`
 - File Download: `/WHR-HFS-API/Download/{filename}`
-
+## Web UI
+![WHR-HFS](image/web.png)
 ## Example
 ```javascript
 // Start the application
