@@ -23,6 +23,8 @@ Once the server is running, you can access the functionality using the following
 - File Download: `/WHR-HFS-API/Download/{filename}`
 ## Web UI
 ![WHR-HFS](image/web.png)
+## Chat room UI
+![WHR-HFS](image/cmd.png)
 ## Example
 ```javascript
 // Start the application
