@@ -1,5 +1,5 @@
 # WHR-HFS Server
-
+![WHR-HFS](image/cmd.png)
 ## Introduction
 WHR-HFS is a server application that provides file upload, download, and streaming services.
 
