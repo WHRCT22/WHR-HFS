@@ -7,20 +7,21 @@ WHR-HFS is a server application that provides file upload, download, and streami
 To install and run the WHR-HFS server, follow these steps:
 
 1. Clone the repository
-2. Install the necessary node modules using `npm install`
+2. Cd it and install the necessary node modules using `npm install`
 3. Run the server using `node app.js`
 
 ## Features
 - File Upload and Download
 - Websocket Chat Server
 - Notification and Permissions
+- More...
 
 ## Usage
 Once the server is running, you can access the functionality using the following endpoints:
 
-- File Upload: `/WHR-HFS-API/Upload`
-- File List: `/WHR-HFS-API/Files-list`
-- File Download: `/WHR-HFS-API/Download/{filename}`
+- File Upload: `/WHR-HFS-API/Upload` [POST]
+- File List: `/WHR-HFS-API/Files-list` [GET]
+- File Download: `/WHR-HFS-API/Download/{filename}` [GET]
 ## Web UI
 ![WHR-HFS](image/web.png)
 ## Chat room UI
