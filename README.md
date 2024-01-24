@@ -36,25 +36,8 @@ Once the server is running, you can access the functionality using the following
 ![WHR-HFS](image/web.png)
 ## Chat room UI
 ![WHR-HFS](image/chat.png)
-## Example
-```javascript
-// Start the application
-const port = 11452;
-app.listen({port}, '0.0.0.0', () => {
-    // Display server information
-    console.log("Application Online");
-    console.log("System Status: Running");
-    console.log("Local Port: 11452");
-    console.log("Server IP: 0.0.0.0");
-    console.log("Storage Folder: {uploadfolder}");
-    // Display WebSocket information
-    console.log("Websocket is running at {wsport}");
-    console.log("Url path '{websocketurl}'");
-    // Display request information
-    console.log("======请求信息显示======");
-});
-```
-## Contributors
+
+## Contributors(贡献者)
 ##### WHRSTUDIO
 ##### WZH-Team
 ## License
