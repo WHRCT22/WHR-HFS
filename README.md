@@ -7,26 +7,24 @@ WHR-HFS is a server application that provides file upload, download, and streami
 WHR-HFS是一个提供文件上传、下载和流媒体服务的服务器应用程序。
 
 ## Installation
-## 安装
 To install and run the WHR-HFS server, follow these steps:
-要安装和运行WHR-HFS服务器，请按照以下步骤操作：
-
 1. Clone the repository
-1. 克隆存储库
 2. Cd it and install the necessary node modules using `npm install`
-2. 使用`npm install`安装必要的节点模块
 3. Run the server using `node app.js`
+## 安装
+要安装和运行WHR-HFS服务器，请按照以下步骤操作：
+1. 克隆存储库
+2. 使用`npm install`安装必要的节点模块
 3. 使用`node app.js`命令行来运行服务器
-
 ## Features
-## 特性
 - File Upload and Download
-- 文件上传与下载
 - Websocket Chat Server
-- 基于Websocket的聊天服务
 - Notification and Permissions
-- 通知和权限
 - More...
+## 特性
+- 文件上传与下载
+- 基于Websocket的聊天服务
+- 通知和权限
 - 更多
 
 ## Usage
