@@ -13,10 +13,8 @@ To install and run the WHR-HFS server, follow these steps:
 
 1. Clone the repository
 1. 克隆存储库
-   
 2. Cd it and install the necessary node modules using `npm install`
 2. 使用`npm install`安装必要的节点模块
-   
 3. Run the server using `node app.js`
 3. 使用`node app.js`命令行来运行服务器
 
@@ -24,13 +22,10 @@ To install and run the WHR-HFS server, follow these steps:
 ## 特性
 - File Upload and Download
 - 文件上传与下载
-- 
 - Websocket Chat Server
 - 基于Websocket的聊天服务
-- 
 - Notification and Permissions
 - 通知和权限
-- 
 - More...
 - 更多
 
