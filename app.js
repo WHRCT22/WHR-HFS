@@ -1,3 +1,4 @@
+console.time('程序已启动成功，启动耗时'); // 开始计时
 // 模块引入
 const { app, uploadfolder, fileModules } = require('./Server/ExpressModules');
 const { websocketurl, websocketProxy, wsport } = require('./Server/Websocket-proxy'); 
@@ -36,6 +37,9 @@ app.listen({port}, '0.0.0.0', () => {
     |--Websocket is running at ${wsport}
     |
     |--Url path "${websocketurl}"`)
+ console.log(``)
+  console.timeEnd('程序已启动成功，启动耗时'); // 结束计时并输出耗时
+ console.log(``)
     console.log(`
     ======请求信息显示======
     `)

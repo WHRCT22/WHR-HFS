@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>注册页面</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <style>
+html, body {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  max-width: 400px;
+  width: 100%;
+  text-align: center; /* 水平居中 */
+}
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">注册WHR-HFS用户</h2>
+  <form>
+ <div class="modal fade" id="loginSuccessModal" tabindex="-1" aria-labelledby="loginSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginSuccessModalLabel">注册状态</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- 用于显示登录成功的数据 -->
+          <div id="loginSuccessData"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="mb-3">
+      <label for="username" class="form-label">用户名</label>
+      <input type="text" class="form-control" id="username">
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">密码</label>
+      <input type="password" class="form-control" id="password">
+    </div>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary">注册</button>
+    </div>
+  </form>
+</div>  
+<script>
+
+
+
+
+// 注册JS开始
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('form');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault(); // 阻止默认的表单提交行为
+
+    // 获取输入的邮件和密码
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    // 添加验证条件
+    if (username.length < 3) {
+      alert('注册用户名必须至少包含3个字符');
+      return;
+    }
+
+    if (password.length < 8 || !/\d/.test(password)) {
+      alert('注册密码必须至少包含8个字符并且包含至少一个数字');
+      return;
+    }
+
+    // 使用 Fetch API 发送 POST 请求
+    fetch('/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    })
+    .then(response => {
+      if (response.status === 200) {
+        return response.text();
+      } else {
+        throw new Error('注册失败');
+      }
+    })
+    .then(data => {
+      // 显示登录成功的数据
+      document.getElementById('loginSuccessData').textContent = data;
+
+      // 显示登录成功模态框
+      const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'), {
+        keyboard: false // 防止用户按下 Esc 键关闭模态框
+      });
+      loginSuccessModal.show();
+
+            // 登录成功后将用户名保存到 localStorage
+      localStorage.setItem('username', username);
+
+      // 监听模态框关闭事件
+          loginSuccessModal._element.addEventListener('hidden.bs.modal', function () {
+         // 关闭后自动跳转到 /
+          window.location.href = '/';
+});
+    })
+    .catch(error => {
+      document.getElementById('loginSuccessData').textContent = error;
+
+      // 显示模态框
+      const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'), {
+        keyboard: false // 防止用户按下 Esc 键关闭模态框
+      });
+      loginSuccessModal.show();
+
+  // 清空输入框的值
+  document.getElementById('username').value = '';
+  document.getElementById('password').value = '';
+
+    });
+  });
+});
+</script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

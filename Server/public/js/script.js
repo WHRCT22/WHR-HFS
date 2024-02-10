@@ -47,6 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
       // 移除文件名 + 正在上传...的文本
       fileUploadStatus.innerHTML = '';
       refreshFileList(currentPageNumber); // 显示默认文件页码
+        fileInput.value = '';
+
+        var audio = new Audio('/sound/notification_sound.wav');
+        audio.play();
+
         // 启用发送按钮
   submitButton.disabled = false;
 
@@ -59,57 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
       sound: "sound/notification_sound.wav"  // 替换为您希望使用的提示音文件路径
     });
   }
-
-      // 创建模态框元素
-      var modal = document.createElement("div");
-      modal.classList.add("modal", "fade"); // Bootstrap v5样式类
-      modal.setAttribute("tabindex", "-1");
-      modal.setAttribute("aria-labelledby", "modalTitle");
-      modal.setAttribute("aria-hidden", "true");
-
-      // 创建模态框对话框
-      var modalDialog = document.createElement("div");
-      modalDialog.classList.add("modal-dialog");
-      modal.appendChild(modalDialog);
-
-      // 创建模态框内容
-      var modalContent = document.createElement("div");
-      modalContent.classList.add("modal-content");
-      modalDialog.appendChild(modalContent);
-
-      // 创建模态框头部
-      var modalHeader = document.createElement("div");
-      modalHeader.classList.add("modal-header");
-      modalHeader.innerHTML = 
-        '<h5 class="modal-title">WHR-HFS文件上传信息</h5>' +
-        '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
-      modalContent.appendChild(modalHeader);
-
-      // 创建模态框主体
-      var modalBody = document.createElement("div");
-      modalBody.classList.add("modal-body");
-      modalBody.innerHTML = data; // 显示服务器返回的消息
-      modalContent.appendChild(modalBody);
-
-      // 创建模态框底部
-      var modalFooter = document.createElement("div");
-      modalFooter.classList.add("modal-footer");
-      modalFooter.innerHTML = 
-        '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #0d6efd;">关闭</button>';
-      modalContent.appendChild(modalFooter);
-
-      // 插入模态框
-      document.body.appendChild(modal);
-
-      // 显示模态框
-      var modalInstance = new bootstrap.Modal(modal);
-      modalInstance.show();
-
-
-        // 清除选择的文件
-        fileInput.value = '';
-        var audio = new Audio('/sound/notification_sound.wav');
-        audio.play();
       })
       .catch(error => {
         // 文件上传失败的回调
@@ -126,12 +80,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-  // 生成二维码及定义生成的信息和大小
-  var qrcode = new QRCode(document.getElementById("qrcode"), {
-    text: window.location.href,
-    width: 150,
-    height: 150,
-  });
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+  text: window.location.href,
+  width: 150,
+  height: 150,
+  correctLevel: QRCode.CorrectLevel.H, // 设置纠错级别为 H（最高级别）
+  useSVG: true // 启用 SVG 生成
+});
 
   document.querySelector(".form-control").addEventListener("input", function () {
     var input, ul, li, a, i, txtValue, resultsFound;
@@ -296,4 +251,73 @@ submitButton.addEventListener("click", function(event) {
   refreshFileList(currentPageNumber); // 显示第一页的文件列表
   renderPagination(); // 渲染分页
   bindPageNavigation(); // 绑定分页按钮点击事件
+});
+
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'h' || event.key === 'H') {
+    var sidebar = document.getElementById('sidebar');
+    var sidebarStyle = window.getComputedStyle(sidebar);
+    if (sidebarStyle.right === '0px' || sidebarStyle.right === '0') {
+      sidebar.style.right = '-260px';
+    } else {
+      sidebar.style.right = '0';
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const username = localStorage.getItem('username');
+  const loginRegisterButtons = document.querySelector('.btn-group[aria-label="Login and Register"]');
+  const greeting = document.createElement('div');
+  greeting.classList.add('greeting'); // 添加一个类名用于后续操作
+  let logoutButton; // 存储退出登录按钮的引用
+
+  if (username) {
+    // 如果 localStorage 中存在用户名
+    loginRegisterButtons.style.display = 'none'; // 隐藏注册和登录按钮
+    greeting.innerHTML = `欢迎回来，${username}！`;
+
+    // 向用户显示欢迎信息
+    loginRegisterButtons.parentNode.insertBefore(greeting, loginRegisterButtons.nextSibling);
+  } else {
+    // 如果 localStorage 中不存在用户名
+    loginRegisterButtons.style.display = 'flex'; // 显示注册和登录按钮
+  }
+
+  // 添加事件监听器，仅在不存在退出按钮时添加
+  greeting.addEventListener('mouseover', function() {
+    if (!logoutButton) {
+      logoutButton = document.createElement('button');
+      logoutButton.textContent = '退出登录';
+      logoutButton.classList.add('btn', 'btn-outline-danger', 'btn-sm'); // 添加Bootstrap v5 的样式类
+      logoutButton.addEventListener('click', function() {
+        // 用户单击退出登录按钮后的操作
+        localStorage.removeItem('username'); // 清除用户名
+        window.location.reload(); // 刷新页面
+      });
+      greeting.appendChild(logoutButton); // 将退出登录按钮添加到欢迎信息中
+    }
+  });
+
+  // 添加mouseout事件监听器，隐藏退出按钮
+  greeting.addEventListener('mouseout', function(event) {
+    if (event.relatedTarget !== logoutButton) {
+      greeting.removeChild(logoutButton); // 移除退出登录按钮
+      logoutButton = null; // 重置退出按钮引用
+    }
+  });
+});
+document.addEventListener('DOMContentLoaded', function() {
+  // 检查本地存储中是否有用户名
+  const username = localStorage.getItem('username');
+
+  if (!username) {
+    // 如果本地存储中没有用户名，则禁止上传文件
+    const fileInput = document.getElementById('filesinputupload');
+    fileInput.disabled = true;
+
+    // 改变上传文件按钮的文字
+    const uploadButton = document.querySelector('button[type="submit"]');
+    uploadButton.textContent = '请登录后上传';
+  }
 });
