@@ -10,7 +10,7 @@
   "scripts": {
     "pkg": "pkg . --out-path=dist/",
     "start": "node app.js",
-    "install": "npm install"
+    "install": "npm install",
     "zip": "zip -r WHR-HFS.zip . -x \"node_modules/*\" \"Uploads/*\" \"dist/*\" \".git/*\""
   },
   "name": "WHR-HFS",
