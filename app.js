@@ -29,18 +29,10 @@ app.listen({port}, '0.0.0.0', () => {
     Storage Folder: ${uploadfolder}
     -----------------------------------
     `);
-    console.log(`
-    The WHR-HFS service is now running on local port ${port}.`)
-    console.log(`
-            [WS模块启动信息]
-
-    |--Websocket is running at ${wsport}
-    |
-    |--Url path "${websocketurl}"`)
  console.log(``)
   console.timeEnd('程序已启动成功，启动耗时'); // 结束计时并输出耗时
  console.log(``)
     console.log(`
-    ======请求信息显示======
+    ======INFO======
     `)
 });
