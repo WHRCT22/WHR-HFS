@@ -73,6 +73,11 @@ app.get('/chat', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/chat.html'));
 });
 
+// 管理路由
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
 // 设置文件上传限制
 const storage = multer.diskStorage({
     destination: uploadPath,
@@ -96,13 +101,19 @@ const storage = multer.diskStorage({
     limits: { fileSize: Infinity, files: Infinity, timeLimit: 60 * 60 * 12  },
   }).array('file');
 
-  // 设置文件上传路由
-  app.post('/WHR-HFS-API/Upload', upload, (req, res) => {
-    console.log('\x1b[32m[', req.headers['x-forwarded-for'] || req.connection.remoteAddress, ']\x1b[0m\x1b[37m POST \x1b[33m', req.files.map(file => `${file.originalname}`).join(', '), '\x1b[0m');
-    console.log(``);
+// 设置文件上传路由
+app.post('/WHR-HFS-API/Upload', upload, (req, res) => {
+  // 获取当前用户名
+  const username = req.body.username; // 假设用户名是通过表单中的username字段传递的
 
-  //获取上传成功的文件名
+  // 获取上传成功的文件信息
   const uploadedFiles = req.files.map(file => `${file.originalname}`).join(', ');
+
+  // 打印用户名和接收的文件信息到控制台
+console.log('\x1b[36m用户', username, '上传了文件:', uploadedFiles, '\x1b[0m');
+console.log('\x1b[32m[', req.headers['x-forwarded-for'] || req.connection.remoteAddress, ']\x1b[0m\x1b[37m POST \x1b[33m', uploadedFiles, '\x1b[0m');
+console.log('');
+
   //返回文件名+上传成功的信息
   res.send(`您的文件 "${uploadedFiles}" 已成功上传至WHR-HFS`);
 });
@@ -220,6 +231,7 @@ app.post('/login', (req, res) => {
     }
   });
 });
+
 module.exports = {
     app,
     uploadfolder,

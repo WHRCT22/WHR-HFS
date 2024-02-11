@@ -34,8 +34,12 @@ document.addEventListener("DOMContentLoaded", function () {
     var fileUploadStatus = document.getElementById('fileUploadStatus');
     fileUploadStatus.innerHTML = `${fileInput.files[0].name} 正在上传...`;
 
+   // 获取当前用户名
+   const username = localStorage.getItem('username');
+
     var formData = new FormData();
     formData.append('file', fileInput.files[0]);
+    formData.append('username', username); // 添加用户名数据
 
     fetch('/WHR-HFS-API/Upload', {
       method: 'POST',
