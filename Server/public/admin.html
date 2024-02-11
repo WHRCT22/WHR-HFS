@@ -47,11 +47,7 @@
                 window.location.href = '/login'; // 未经验证的重定向到登录页面
             } else {
                 // 获取文件列表
-                fetch("/WHR-HFS-API/Files-list", {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
+                fetch("/WHR-HFS-API/Files-list")
                     .then(response => response.json())
                     .then(data => {
                         const fileListTableBody = document.getElementById("fileListTableBody");
@@ -77,11 +73,7 @@
 
         function deleteFile(filename) {
             const token = localStorage.getItem('token');
-            fetch(`/admin/delete/${filename}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
+            fetch(`/admin/delete/${filename}`)
                 .then(response => response.text())
                 .then(data => {
                     alert(data); // 显示删除消息提示
