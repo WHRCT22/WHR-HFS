@@ -30,6 +30,7 @@
                         <tr>
                             <th scope="col">文件名</th>
                             <th scope="col">大小</th>
+                            <th scope="col">上传者</th> <!-- 添加上传者一列 -->
                             <th scope="col">行动</th>
                         </tr>
                     </thead>
@@ -56,6 +57,7 @@
                             row.innerHTML = `
                             <td>${file.name}</td>
                             <td>${file.size} 字节</td>
+                            <td>${file.uploader}</td> <!-- 显示上传者 -->
                             <td>
                                 <a href="/WHR-HFS-API/Download/${file.name}" class="btn btn-primary" download>下载</a>
                                 <button onclick="deleteFile('${file.name}')" class="btn btn-danger">删除</button>

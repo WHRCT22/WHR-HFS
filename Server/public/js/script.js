@@ -140,66 +140,71 @@ submitButton.addEventListener("click", function(event) {
   // 总页数
   var totalPages = 1;
 
-  // 刷新文件列表
-  function refreshFileList(pageNumber) {
-    var fileList = document.getElementById("file-list");
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/WHR-HFS-API/Files-list?page=" + pageNumber, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        var data = JSON.parse(xhr.responseText);
-        fileList.innerHTML = "";
-        if (data.files.length === 0) {
-          // 显示空列表消息
-          var noResultsMessage = document.createElement("div");
-          noResultsMessage.classList.add("error-message");
-          noResultsMessage.innerHTML = "此页暂无文件";
-          fileList.appendChild(noResultsMessage);
-        } else {
-          // 创建文件列表项
-          data.files.forEach(function (file) {
-            var li = document.createElement("li");
-            var a = document.createElement("a");
-            var span = document.createElement("span");
+// 刷新文件列表
+function refreshFileList(pageNumber) {
+  var fileList = document.getElementById("file-list");
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/WHR-HFS-API/Files-list?page=" + pageNumber, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var data = JSON.parse(xhr.responseText);
+      fileList.innerHTML = "";
+      if (data.files.length === 0) {
+        // 显示空列表消息
+        var noResultsMessage = document.createElement("div");
+        noResultsMessage.classList.add("error-message");
+        noResultsMessage.innerHTML = "此页暂无文件";
+        fileList.appendChild(noResultsMessage);
+      } else {
+        data.files.forEach(function (file) {
+          var li = document.createElement("li");
+          var a = document.createElement("a");
+          var span = document.createElement("span");
 
-            a.href = "/WHR-HFS-API/Download/" + file.name;
-            a.style.display = "block";
-            a.innerHTML = file.name;
+          a.href = "/WHR-HFS-API/Download/" + file.name;
+          a.style.display = "block";
+          a.innerHTML = file.name;
 
+          // 在文件名右边加上文件上传者的信息
+          var uploaderInfo = document.createElement("span");
+          uploaderInfo.innerHTML = " (上传者: " + file.uploader + ")";
+          uploaderInfo.style.color = "gray";
+          uploaderInfo.style.fontStyle = "italic";
+          a.appendChild(uploaderInfo);
+
+          if (file.isDirectory === "1") {
+            span.innerHTML = " 文件夹";
+          } else {
             var fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
-            if (!file.isDirectory) {
-              span.innerHTML = " 文件大小：" + fileSizeInMB + " MB";
-            } else {
-              span.innerHTML = " 文件夹";
-            }
-            span.style.color = "darkgray";
-            span.style.fontWeight = "bold";
+            span.innerHTML = " 文件大小：" + fileSizeInMB + " MB";
+          }
+          span.style.color = "darkgray";
+          span.style.fontWeight = "bold";
 
-            a.addEventListener("click", function (event) {
-              event.preventDefault();
-              window.open(a.href, "_blank");
-            });
-
-            li.classList.add("list-group-item", "list-group-item-action");
-            li.appendChild(a);
-            li.appendChild(span);
-            fileList.appendChild(li);
+          a.addEventListener("click", function (event) {
+            event.preventDefault();
+            window.open(a.href, "_blank");
           });
-        }
 
-        // 更新当前页码
-        currentPageNumber = pageNumber;
-
-        // 从JSON数据中获取totalPages
-        totalPages = data.totalPages;
-
-        // 渲染分页
-        renderPagination();
+          li.classList.add("list-group-item", "list-group-item-action");
+          li.appendChild(a);
+          li.appendChild(span);
+          fileList.appendChild(li);
+        });
       }
-    };
-    xhr.send();
-  }
 
+      // 更新当前页码
+      currentPageNumber = pageNumber;
+
+      // 从JSON数据中获取totalPages
+      totalPages = data.totalPages;
+
+      // 渲染分页
+      renderPagination();
+    }
+  };
+  xhr.send();
+}
 
   // 渲染分页
   function renderPagination() {
