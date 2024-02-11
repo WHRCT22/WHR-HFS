@@ -22,32 +22,36 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/WHR-HFS-API/Files-list', (req, res) => {
   const pageNumber = parseInt(req.query.page) || 1;
   const pageSize = 10;
-  const uploadPath = path.join(process.cwd(), `${uploadfolder}`);
-  const files = fs.readdirSync(uploadPath);
-  const totalFiles = files.length;
-  const totalPages = Math.ceil(totalFiles / pageSize);
 
-  const startIndex = (pageNumber - 1) * pageSize;
-  const endIndex = pageNumber * pageSize;
-  const fileList = [];
+  db.all('SELECT * FROM files', [], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({ success: false, error: "服务器发生错误" });
+    } else {
+      const totalFiles = rows.length;
+      const totalPages = Math.ceil(totalFiles / pageSize);
 
-  files.slice(startIndex, endIndex).forEach((file) => {
-      const filePath = path.join(uploadPath, file);
-      const stats = fs.statSync(filePath);
+      const startIndex = (pageNumber - 1) * pageSize;
+      const endIndex = pageNumber * pageSize;
+      const fileList = [];
 
-      const fileData = {
-          name: file,
-          size: stats.size,
-          isDirectory: stats.isDirectory()
-      };
-      fileList.push(fileData);
-  });
+      rows.slice(startIndex, endIndex).forEach((file) => {
+        const fileData = {
+          name: file.filename,
+          size: file.size,
+          uploader: file.uploader,
+          isDirectory: file.isDirectory
+        };
+        fileList.push(fileData);
+      });
 
-  res.json({
-      success: true,
-      warn: false,
-      files: fileList,
-      totalPages: totalPages // 将 totalPages 作为局部变量返回给前端
+      return res.json({
+        success: true,
+        warn: false,
+        files: fileList,
+        totalPages: totalPages
+      });
+    }
   });
 });
 
@@ -107,15 +111,32 @@ app.post('/WHR-HFS-API/Upload', upload, (req, res) => {
   const username = req.body.username; // 假设用户名是通过表单中的username字段传递的
 
   // 获取上传成功的文件信息
-  const uploadedFiles = req.files.map(file => `${file.originalname}`).join(', ');
+  const uploadedFiles = req.files;
+
+  // 循环处理每个上传的文件
+  uploadedFiles.forEach(file => {
+    const filename = file.originalname;
+    const filesize = file.size;
+    // 根据文件名是否包含`.`来判断是否为文件夹
+    const isDirectory = (filename.indexOf('.') === -1) ? true : false;
+
+    // 将文件信息和上传者的信息存储在数据库中
+    db.run('INSERT INTO files (filename, size, uploader, isDirectory) VALUES (?, ?, ?, ?)', [filename, filesize, username, isDirectory], function (err) {
+      if (err) {
+        console.error(err.message);
+        res.status(500).send('在向表写入数据时发生错误');
+        return;
+      }
+    });
+  });
 
   // 打印用户名和接收的文件信息到控制台
-console.log('\x1b[36m用户', username, '上传了文件:', uploadedFiles, '\x1b[0m');
-console.log('\x1b[32m[', req.headers['x-forwarded-for'] || req.connection.remoteAddress, ']\x1b[0m\x1b[37m POST \x1b[33m', uploadedFiles, '\x1b[0m');
-console.log('');
+  console.log('\x1b[36m用户', username, '上传了文件:', uploadedFiles.map(file => file.originalname).join(', '), '\x1b[0m');
+  console.log('\x1b[32m[', req.headers['x-forwarded-for'] || req.connection.remoteAddress, ']\x1b[0m\x1b[37m POST \x1b[33m', uploadedFiles.map(file => file.originalname).join(', '), '\x1b[0m');
+  console.log('');
 
-  //返回文件名+上传成功的信息
-  res.send(`您的文件 "${uploadedFiles}" 已成功上传至WHR-HFS`);
+  // 返回上传成功的信息
+  res.send(`您的文件 "${uploadedFiles.map(file => file.originalname).join(', ')}" 已成功上传至WHR-HFS`);
 });
 
 // 下载文件路由
@@ -126,36 +147,44 @@ app.get('/WHR-HFS-API/Download/:file', (req, res) => {
     if (fs.existsSync(file)) {
         res.sendFile(file);
     } else {
-        const notFoundFile = path.join(__dirname, 'public/404.html');
+        const notFoundFile = path.join(__dirname, 'public/404.svg');
         res.sendFile(notFoundFile);
     }
 });
 
 // 删除文件中间件
 const deleteFileMiddleware = (req, res, next) => {
-    const filename = req.params.filename; // 获取文件名参数
-    const filePath = `${uploadfolder}/${filename}`; // 替换为文件的完整路径
-  
-  // 检查文件是否存在
+  const filename = req.params.filename; // 获取文件名参数
+  const filePath = `${uploadfolder}/${filename}`; // 替换为文件的完整路径
+
   if (fs.existsSync(filePath)) {
     // 删除指定文件
     fs.unlink(filePath, (err) => {
       if (err) {
         console.error("删除文件时发生错误", err);
-        res.status(500).send("在删除文件发生了一丢丢错误",err);
+        res.status(500).send("在删除文件时发生错误", err);
       } else {
         console.log(`"${filename}" 已成功删除`);
-        res.send(`文件" ${filename}"删除成功！`);
+
+        // 从数据库中删除文件相关的信息
+        db.run('DELETE FROM files WHERE filename = ?', [filename], function (err) {
+          if (err) {
+            console.error(err.message); // 打印错误信息到控制台
+            res.status(500).send('在删除文件相关信息时发生错误');
+            return;
+          }
+          // 如果数据库中的文件信息删除成功，向客户端发送成功消息
+          res.send(`文件"${filename}"删除成功！数据库中的文件信息已成功删除`);
+        });
       }
     });
   } else {
-    res.status(404).send("在远程服务器上的目录中未找到所指定进行操作的文件 Error 404");
+    res.status(404).send("未找到要删除的文件 Error 404");
   }
 };
-  
-  // 设置/admin/delete/:filename路由并添加删除文件中间件
-  app.get('/admin/delete/:filename', deleteFileMiddleware);
 
+// 设置/admin/delete/:filename路由并添加删除文件中间件
+app.get('/admin/delete/:filename', deleteFileMiddleware);
 
 
 app.use(express.json());
@@ -175,9 +204,10 @@ let db = new sqlite3.Database(dbFile, (err) => {
   }
 });
 
-// 创建 users 表
+// 创建 表
 db.serialize(() => {
   db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)');
+  db.run('CREATE TABLE IF NOT EXISTS files (id INTEGER PRIMARY KEY, filename TEXT, uploader TEXT, size TEXT, isDirectory TEXT) ');
 });
 
 app.post('/register', (req, res) => {
