@@ -15,6 +15,18 @@ const app = express();
 const fileModules = express();
 // console.log('');
 
+
+
+// 记录程序启动时间
+const startTime = Date.now();
+
+// 将程序运行时间传递给前端
+app.get('/runtime', (req, res) => {
+  const runtime = Date.now() - startTime;
+  res.json({ runtime });
+});
+
+
 // 设置静态资源Base路径
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -67,6 +79,10 @@ app.get('/about', (req, res) => {
 //登录页面
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/login.html'));
+});
+//IE不被支持页面
+app.get('/ie-blocked-page', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/ie-blocked-page.html'));
 });
 //注册页面
 app.get('/register', (req, res) => {
@@ -132,7 +148,6 @@ app.post('/WHR-HFS-API/Upload', upload, (req, res) => {
 
   // 打印用户名和接收的文件信息到控制台
   console.log('\x1b[36m用户', username, '上传了文件:', uploadedFiles.map(file => file.originalname).join(', '), '\x1b[0m');
-  console.log('\x1b[32m[', req.headers['x-forwarded-for'] || req.connection.remoteAddress, ']\x1b[0m\x1b[37m POST \x1b[33m', uploadedFiles.map(file => file.originalname).join(', '), '\x1b[0m');
   console.log('');
 
   // 返回上传成功的信息
@@ -141,7 +156,7 @@ app.post('/WHR-HFS-API/Upload', upload, (req, res) => {
 
 // 下载文件路由
 app.get('/WHR-HFS-API/Download/:file', (req, res) => {
-    console.log('\x1b[32m', '[', req.headers['x-forwarded-for'] || req.connection.remoteAddress, ']', '\x1b[0m', '\x1b[37m', 'GET', '\x1b[33m', req.params.file, '\x1b[0m');
+    console.log('\x1b[36m[%s]\x1b[0m \x1b[37m%s \x1b[35m%s\x1b[0m', req.headers['x-forwarded-for'] || req.connection.remoteAddress, 'GET', req.params.file);
     const file = path.join(process.cwd(), `${uploadfolder}`, req.params.file);
     console.log(``);
     if (fs.existsSync(file)) {
@@ -161,10 +176,11 @@ const deleteFileMiddleware = (req, res, next) => {
     // 删除指定文件
     fs.unlink(filePath, (err) => {
       if (err) {
-        console.error("删除文件时发生错误", err);
-        res.status(500).send("在删除文件时发生错误", err);
+        console.error("\x1b[31m删除文件时发生错误", err, "\x1b[0m");
+        res.status(500).send("\x1b[31m在删除文件时发生错误", err, "\x1b[0m");
       } else {
-        console.log(`"${filename}" 已成功删除`);
+        console.log("\x1b[31m\"" + filename + "\" 已成功删除\x1b[0m");
+        console.log('');
 
         // 从数据库中删除文件相关的信息
         db.run('DELETE FROM files WHERE filename = ?', [filename], function (err) {
@@ -192,7 +208,7 @@ app.use(express.json());
 
 
 // 数据库文件
-const dbFile = 'userdata.db';
+const dbFile = 'Configuration.db';
 
 // 创建数据库连接并打开，并记录耗时
 
@@ -200,11 +216,11 @@ let db = new sqlite3.Database(dbFile, (err) => {
   if (err) {
     console.error('\x1b[31m%s\x1b[0m', err.message); // 红色
   } else {
-    console.log('\x1b[32m%s\x1b[0m', '已连接至Sqlite3本地用户数据库'); // 绿色
+    console.log('\x1b[32m%s\x1b[0m', '已成功连接数据库'); // 绿色
   }
 });
 
-// 创建 表
+// 创建Table
 db.serialize(() => {
   db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)');
   db.run('CREATE TABLE IF NOT EXISTS files (id INTEGER PRIMARY KEY, filename TEXT, uploader TEXT, size TEXT, isDirectory TEXT) ');
@@ -223,7 +239,8 @@ app.post('/register', (req, res) => {
       return;
     }
     if (row) {
-      console.log(`Registration failed - Username: ${username} already exists.`);
+      console.log(`注册失败 - 用户名： ${username} 已存在。`);
+      console.log(``);
       res.status(409).send('HTTPCODE:409   错误信息：在表中已有相同的用户名存在'); 
     } else {
       // 添加对密码的复杂性和长度的检查
@@ -239,7 +256,7 @@ app.post('/register', (req, res) => {
           res.status(500).send('在向表写入数据时发生错误');
           return;
         }
-        res.send(`您已注册成功！用户名" ${username}"密码 "${password}"，请妥善保管此信息，请勿泄露此信息`);
+        res.send(`注册成功！用户名" ${username}"密码 "${password}"，请妥善保管此信息，请勿泄露此信息`);
       });
     }
   });
@@ -253,9 +270,10 @@ app.post('/login', (req, res) => {
       return console.error(err.message);
     }
     if (row) {
-      console.log(`用户${username}已登录`); // 记录用户登录信息
+      console.log('');
+      console.log(`${username}已登录`); // 记录用户登录信息
       
-      res.send(`WHR-HFS用户${username}，欢迎回来！`); // 发送欢迎消息及用户名
+      res.send(`${username}，欢迎回来！`); // 发送包含欢迎消息及用户名的TXT文本信息
     } else {
       res.status(401).send('HTTPCODE:401  错误信息：不存在的用户名');
     }

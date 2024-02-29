@@ -1,23 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  document.addEventListener("click", function() {
-    if (!localStorage.getItem('notificationShown')) {
-        setTimeout(function() {
-            Notification.requestPermission().then(function (permission) {
-                if (permission === "granted") {
-                    var notification = new Notification("WHR-HFS授权通知权限", {
-                        body: "您已成功授权WHR-HFS[通知]权限",
-                        icon: "favicon.ico",
-                        sound: "sound/notification_sound.wav"
-                    });
-                    localStorage.setItem('notificationShown', 'true');
-                }
-            });
-        }, 500);
-    }
-  });
-
-
   // 文件上传
   var form = document.querySelector('form[action="/WHR-HFS-API/Upload"]');
   var fileInput = document.querySelector('input[type="file"]');
@@ -57,17 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
         audio.play();
 
         // 启用发送按钮
-  submitButton.disabled = false;
+        submitButton.disabled = false;
 
-
-  // 请求弹窗通知权限
-  if (Notification.permission === "granted") {
-    var notification = new Notification("WHR-HFS文件上传成功通知", {
-      body: "您的文件已成功上传至WHR-HFS",
-      icon: "favicon.ico", // 修改为相应的图片文件路径
-      sound: "sound/notification_sound.wav"  // 替换为您希望使用的提示音文件路径
-    });
-  }
       })
       .catch(error => {
         // 文件上传失败的回调
@@ -82,15 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-
-
-var qrcode = new QRCode(document.getElementById("qrcode"), {
-  text: window.location.href,
-  width: 150,
-  height: 150,
-  correctLevel: QRCode.CorrectLevel.H, // 设置纠错级别为 H（最高级别）
-  useSVG: true // 启用 SVG 生成
-});
 
   document.querySelector(".form-control").addEventListener("input", function () {
     var input, ul, li, a, i, txtValue, resultsFound;
@@ -124,21 +88,21 @@ submitButton.addEventListener("click", function(event) {
   // 如果没有选择文件则显示错误消息并阻止默认操作
   if (fileInput.files.length === 0) {
     event.preventDefault();
-    document.getElementById('error-message').innerHTML = '您必须选择一个文件来进行上传操作';
+    document.getElementById('error-message').innerHTML = '请选择一个文件来进行上传操作';
     document.getElementById('error-message').style.display = 'block';
         // 2.3秒后隐藏错误消息
         setTimeout(function() {
           document.getElementById('error-message').style.display = 'none';
-        }, 2300);
+        }, 3000);
     return;
   }
 });
 
   // 当前页码
-  var currentPageNumber = 1;
+  var currentPageNumber = 1; //默认的页数，将在后续获取JSON时动态更新
 
   // 总页数
-  var totalPages = 1;
+  var totalPages = 1; //默认的页数，将在后续获取JSON时动态更新
 
 // 刷新文件列表
 function refreshFileList(pageNumber) {
@@ -262,17 +226,6 @@ function refreshFileList(pageNumber) {
   bindPageNavigation(); // 绑定分页按钮点击事件
 });
 
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'h' || event.key === 'H') {
-    var sidebar = document.getElementById('sidebar');
-    var sidebarStyle = window.getComputedStyle(sidebar);
-    if (sidebarStyle.right === '0px' || sidebarStyle.right === '0') {
-      sidebar.style.right = '-260px';
-    } else {
-      sidebar.style.right = '0';
-    }
-  }
-});
 
 document.addEventListener('DOMContentLoaded', function() {
   const username = localStorage.getItem('username');
@@ -297,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
   greeting.addEventListener('mouseover', function() {
     if (!logoutButton) {
       logoutButton = document.createElement('button');
-      logoutButton.textContent = '退出登录';
+      logoutButton.textContent = '登出';
       logoutButton.classList.add('btn', 'btn-outline-danger', 'btn-sm'); // 添加Bootstrap v5 的样式类
       logoutButton.addEventListener('click', function() {
         // 用户单击退出登录按钮后的操作
@@ -327,6 +280,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 改变上传文件按钮的文字
     const uploadButton = document.querySelector('button[type="submit"]');
-    uploadButton.textContent = '请登录后上传';
+    uploadButton.textContent = '请先登录后再进行上传';
   }
 });
+
+
+// 后台程序启动时间
+function formatRuntime(milliseconds) {
+  const timeInSeconds = Math.floor(milliseconds / 1000);
+  if (timeInSeconds < 60) {
+    return `${timeInSeconds} 秒`;
+  } else {
+    const timeInMinutes = Math.floor(timeInSeconds / 60);
+    if (timeInMinutes < 60) {
+      const remainingSeconds = timeInSeconds % 60;
+      return `${timeInMinutes} 分钟 ${remainingSeconds} 秒`;
+    } else {
+      const timeInHours = Math.floor(timeInMinutes / 60);
+      const remainingMinutes = timeInMinutes % 60;
+      if (timeInHours < 24) {
+        return `${timeInHours} 小时 ${remainingMinutes} 分钟`;
+      } else {
+        const timeInDays = Math.floor(timeInHours / 24);
+        const remainingHours = timeInHours % 24;
+        if (timeInDays < 365) {
+          return `${timeInDays} 天 ${remainingHours} 小时`;
+        } else {
+          const timeInYears = Math.floor(timeInDays / 365);
+          const remainingDays = timeInDays % 365;
+          return `${timeInYears} 年 ${remainingDays} 天`;
+        }
+      }
+    }
+  }
+}
+
+function updateRuntime() {
+  fetch('/runtime')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('请求失败');
+      }
+      return response.json();
+    })
+    .then(data => {
+      const runtimeElement = document.getElementById('runtime');
+      runtimeElement.textContent = `WHR-HFS后端已运行：${formatRuntime(data.runtime)}`;
+      runtimeElement.style.color = 'black';
+    })
+    .catch(error => {
+      console.error('请求失败:', error);
+      const runtimeElement = document.getElementById('runtime');
+      runtimeElement.textContent = `服务器无法响应，错误信息：${error.message}`;
+      runtimeElement.style.color = 'red';
+    });
+}
+
+// 初次加载页面时先请求一次，之后每隔1秒重新请求并替换显示的数据
+updateRuntime();
+setInterval(updateRuntime, 1000);  // 每1秒执行一次updateRuntime函数

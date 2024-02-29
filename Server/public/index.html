@@ -10,10 +10,11 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/block-ie.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
-    <title>WHR-FileShareHub</title>
+    <title>WHR文件服务中心</title>
     <style>
  
     body {
@@ -30,10 +31,6 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
       transition: right 0.3s;
     }
-
-  .badge.bg-success {
-  background-color: green;
-}
   .error-message {
   background-color: #f8d7da; /* 设置背景颜色 */
   color: #721c24; /* 设置文字颜色 */
@@ -59,7 +56,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
 <div class="container-fluid">
     <a class="navbar-brand" href="#">
-        <img src="favicon.ico" alt="icon"> WHR-HFS首页
+        <img src="favicon.ico" alt="icon">WHR-文件服务中心
     </a>
     <div class="btn-group ml-auto" role="group" aria-label="Login and Register">
         <a href="/register" class="btn btn-outline-secondary">注册</a>
@@ -69,8 +66,6 @@
         </nav>
     </header>
     <div class="container mt-5">
-        <div id="qrcode" class="d-flex justify-content-center"></div>
-        <p class="text-center">扫码访问此网站</p>
         <h2 class="text-center mb-5">WHR-HFS文件中心</h2>
     </div>
     <div class="row mt-3">
@@ -84,27 +79,8 @@
         </div>
     </div>
     <div id="no-results" class="text-center mt-3" style="display: none;">
-        抱歉，未在此页找到包含指定文件名的文件 [Doge]
+        未在此页的数据中检索到包含指定文件名的文件
       </div>
-
-  <div class="sidebar" id="sidebar">
-    <h1>帮助</h1>
-<small>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <last>如有任何意见或问题，Q我</last>
-</small>
-  </div>
-
-
-
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <ul id="file-list" class="list-group">
@@ -146,8 +122,9 @@
         </div>
     <footer class="text-center mt-3">
         <a href="/about" target="_blank">About页面</a> 或者 <a href="/chat" target="_blank">聊天室</a>
+        <br>
+                <div id="runtime"></div>
     </footer>
 </body>
-<script src="js/qrcode.min.js"></script>
 <script src="js/script.js"></script>
 </html>
