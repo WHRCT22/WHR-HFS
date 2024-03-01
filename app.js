@@ -25,14 +25,9 @@ app.listen({port}, '0.0.0.0', () => {
     -----------------------------------
     System Status: Running
     Local Port: ${port}
-    Server IP: 0.0.0.0
+    Server IP: 0.0.0.0 [本机所有网络环路]
     Storage Folder: ${uploadfolder}
     -----------------------------------
     `);
  console.log(``)
-  console.timeEnd('程序已启动成功，启动耗时'); // 结束计时并输出耗时
- console.log(``)
-    console.log(`
-    ======INFO======
-    `)
 });

@@ -217,6 +217,7 @@ let db = new sqlite3.Database(dbFile, (err) => {
     console.error('\x1b[31m%s\x1b[0m', err.message); // 红色
   } else {
     console.log('\x1b[32m%s\x1b[0m', '已成功连接数据库'); // 绿色
+    console.log('');
   }
 });
 
@@ -229,7 +230,12 @@ db.serialize(() => {
 app.post('/register', (req, res) => {
   const { username, password } = req.body;
   // 控制台打印要注册的用户名和密码
-  console.log(`接收到用户注册请求 - 申请的用户名: ${username}, 密码: ${password}`);
+const reset = "\x1b[0m";
+const blue = "\x1b[34m";
+const red = "\x1b[31m";
+
+  console.log(`${blue}接收到用户注册请求 - 申请的用户名: ${red}${username}${blue}, 密码: ${red}${password}${reset}`);
+  console.log('');
   
   // 首先检查数据库中是否存在相同的用户名
   db.get('SELECT username FROM users WHERE username = ?', [username], (err, row) => {
@@ -256,6 +262,7 @@ app.post('/register', (req, res) => {
           res.status(500).send('在向表写入数据时发生错误');
           return;
         }
+        console.log(`请求的用户名${red}${username}${reset}已写入DB数据库`);
         res.send(`注册成功！用户名" ${username}"密码 "${password}"，请妥善保管此信息，请勿泄露此信息`);
       });
     }
@@ -269,14 +276,21 @@ app.post('/login', (req, res) => {
     if (err) {
       return console.error(err.message);
     }
-    if (row) {
-      console.log('');
-      console.log(`${username}已登录`); // 记录用户登录信息
-      
-      res.send(`${username}，欢迎回来！`); // 发送包含欢迎消息及用户名的TXT文本信息
-    } else {
-      res.status(401).send('HTTPCODE:401  错误信息：不存在的用户名');
-    }
+const reset = "\x1b[0m";
+const underline = "\x1b[4m";
+const green = "\x1b[32m";
+const red = "\x1b[31m";
+
+if (row) {
+  console.log('');
+  console.log(`${underline}${green}${username}${reset}已登录`); // 记录用户登录信息
+  console.log(``);
+  res.send(`${username}，欢迎回来！`); // 发送包含欢迎消息及用户名的TXT文本信息
+} else {
+  console.log('');
+  console.log(`${red}不存在的用户名${reset}`);
+  res.status(401).send('HTTPCODE:401  错误信息：不存在的用户名');
+}
   });
 });
 
