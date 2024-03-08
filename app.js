@@ -16,7 +16,7 @@ function readConfig() {
     // 如果config.ini文件不存在，就创建一个默认的config.ini文件并写入默认端口信息
     try {
       const defaultConfig = {
-        SeverPort: 80, // 默认端口号
+        SeverPort: 11452, // 默认端口号
       };
       fs.writeFileSync(configPath, ini.stringify(defaultConfig));
       return defaultConfig.SeverPort;
