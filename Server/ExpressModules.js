@@ -136,12 +136,22 @@ app.post('/WHR-HFS-API/Upload', upload, (req, res) => {
     // 根据文件名是否包含`.`来判断是否为文件夹
     const isDirectory = (filename.indexOf('.') === -1) ? true : false;
 
-    // 将文件信息和上传者的信息存储在数据库中
-    db.run('INSERT INTO files (filename, size, uploader, isDirectory) VALUES (?, ?, ?, ?)', [filename, filesize, username, isDirectory], function (err) {
+    // 查询数据库是否已存在相同文件名
+    db.get('SELECT * FROM files WHERE filename = ?', [filename], (err, row) => {
       if (err) {
         console.error(err.message);
-        res.status(500).send('在向表写入数据时发生错误');
+        res.status(500).send('在查询数据库时发生错误');
         return;
+      }
+      if (!row) {
+        // 文件不存在于数据库中，将文件信息存储在数据库中
+        db.run('INSERT INTO files (filename, size, uploader, isDirectory) VALUES (?, ?, ?, ?)', [filename, filesize, username, isDirectory], function (err) {
+          if (err) {
+            console.error(err.message);
+            res.status(500).send('在向表写入数据时发生错误');
+            return;
+          }
+        });
       }
     });
   });
