@@ -104,7 +104,6 @@ submitButton.addEventListener("click", function(event) {
   // 总页数
   var totalPages = 1; //默认的页数，将在后续获取JSON时动态更新
 
-// 刷新文件列表
 function refreshFileList(pageNumber) {
   var fileList = document.getElementById("file-list");
   var xhr = new XMLHttpRequest();
@@ -124,36 +123,43 @@ function refreshFileList(pageNumber) {
           var li = document.createElement("li");
           var a = document.createElement("a");
           var span = document.createElement("span");
+          var p = document.createElement("p");
 
           a.href = "/WHR-HFS-API/Download/" + file.name;
           a.style.display = "block";
           a.innerHTML = file.name;
 
-          // 在文件名右边加上文件上传者的信息
-          var uploaderInfo = document.createElement("span");
-          uploaderInfo.innerHTML = " (上传者: " + file.uploader + ")";
-          uploaderInfo.style.color = "gray";
-          uploaderInfo.style.fontStyle = "italic";
-          a.appendChild(uploaderInfo);
 
           if (file.isDirectory === "1") {
             span.innerHTML = " 文件夹";
           } else {
-            var fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
-            span.innerHTML = " 文件大小：" + fileSizeInMB + " MB";
+if (file.size < 1024) {
+  // 小于1KB，显示为B
+  span.innerHTML = " 文件大小: " + file.size + " B";
+} else if (file.size < 1024 * 1024) {
+  // 大于等于1KB且小于1MB，显示为KB
+  var fileSizeInKB = (file.size / 1024).toFixed(1);
+  span.innerHTML = " 文件大小: " + fileSizeInKB + " KB";
+} else {
+  // 大于等于1MB，显示为MB
+  var fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
+  span.innerHTML = " 文件大小: " + fileSizeInMB + " MB";
+}
+
+            // 获取上传时间信息
+            var uploadTime = new Date(file.uploadTime).toLocaleString(); // 替换为实际的上传时间字段名
+
+            // 在段落元素中显示上传时间
+            p.innerHTML = "上传时间: " + uploadTime;
+            p.classList.add("text-secondary", "middle"); // 注：这里使用了 Bootstrap 5 的类
+
+            // 将文件名称、文件大小、上传者以及上传时间添加到文件列表中
+            li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+            li.appendChild(a);
+            li.appendChild(span);
+            li.appendChild(p);
+            fileList.appendChild(li);
           }
-          span.style.color = "darkgray";
-          span.style.fontWeight = "bold";
-
-          a.addEventListener("click", function (event) {
-            event.preventDefault();
-            window.open(a.href, "_blank");
-          });
-
-          li.classList.add("list-group-item", "list-group-item-action");
-          li.appendChild(a);
-          li.appendChild(span);
-          fileList.appendChild(li);
         });
       }
 
