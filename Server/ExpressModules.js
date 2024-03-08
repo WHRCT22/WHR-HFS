@@ -1,4 +1,4 @@
-// 文件操作模块，保存为 FileModule.js
+// 网络承载及文件操作模块
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -210,13 +210,11 @@ app.use(express.json());
 // 数据库文件
 const dbFile = 'Configuration.db';
 
-// 创建数据库连接并打开，并记录耗时
 
 let db = new sqlite3.Database(dbFile, (err) => {
   if (err) {
     console.error('\x1b[31m%s\x1b[0m', err.message); // 红色
   } else {
-    console.log('\x1b[32m%s\x1b[0m', '已成功连接数据库'); // 绿色
     console.log('');
   }
 });
