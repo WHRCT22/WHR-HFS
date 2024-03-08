@@ -45,24 +45,25 @@ app.get('/WHR-HFS-API/Files-list', (req, res) => {
 
       const startIndex = (pageNumber - 1) * pageSize;
       const endIndex = pageNumber * pageSize;
-      const fileList = [];
+const fileList = [];
 
-      rows.slice(startIndex, endIndex).forEach((file) => {
-        const fileData = {
-          name: file.filename,
-          size: file.size,
-          uploader: file.uploader,
-          isDirectory: file.isDirectory
-        };
-        fileList.push(fileData);
-      });
+rows.slice(startIndex, endIndex).forEach((file) => {
+  const fileData = {
+    name: file.filename,
+    size: file.size,
+    uploader: file.uploader,
+    isDirectory: file.isDirectory,
+    uploadTime: file.uploadTime // 添加文件上传时间信息
+  };
+  fileList.push(fileData);
+});
 
-      return res.json({
-        success: true,
-        warn: false,
-        files: fileList,
-        totalPages: totalPages
-      });
+return res.json({
+  success: true,
+  warn: false,
+  files: fileList,
+  totalPages: totalPages
+});
     }
   });
 });
@@ -145,7 +146,7 @@ app.post('/WHR-HFS-API/Upload', upload, (req, res) => {
       }
       if (!row) {
         // 文件不存在于数据库中，将文件信息存储在数据库中
-        db.run('INSERT INTO files (filename, size, uploader, isDirectory) VALUES (?, ?, ?, ?)', [filename, filesize, username, isDirectory], function (err) {
+        db.run('INSERT INTO files (filename, size, uploader, isDirectory, uploadTime) VALUES (?, ?, ?, ?, ?)', [filename, filesize, username, isDirectory, new Date().toISOString()], function (err) {
           if (err) {
             console.error(err.message);
             res.status(500).send('在向表写入数据时发生错误');
@@ -232,7 +233,7 @@ let db = new sqlite3.Database(dbFile, (err) => {
 // 创建Table
 db.serialize(() => {
   db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)');
-  db.run('CREATE TABLE IF NOT EXISTS files (id INTEGER PRIMARY KEY, filename TEXT, uploader TEXT, size TEXT, isDirectory TEXT) ');
+  db.run('CREATE TABLE IF NOT EXISTS files (id INTEGER PRIMARY KEY, filename TEXT, uploader TEXT, size TEXT, isDirectory TEXT, uploadTime TEXT) ');
 });
 
 app.post('/register', (req, res) => {
