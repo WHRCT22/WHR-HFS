@@ -13,4 +13,14 @@ body {
 h2 {
     font-size:2.25em;
     margin-top:1em;
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.upload-info {
+  margin-top: auto;
+  color: gray;
+}
 }
