@@ -147,17 +147,17 @@ if (file.size < 1024) {
 }
 
             // 获取上传时间信息
-            var uploadTime = new Date(file.uploadTime).toLocaleString(); // 替换为实际的上传时间字段名
+            // var uploadTime = new Date(file.uploadTime).toLocaleString(); // 替换为实际的上传时间字段名
 
             // 在段落元素中显示上传时间
-            p.innerHTML = "上传时间: " + uploadTime;
-            p.classList.add("text-secondary", "middle"); // 注：这里使用了 Bootstrap 5 的类
+            // p.innerHTML = "上传时间: " + uploadTime;
+            // p.classList.add("text-secondary", "middle"); // 注：这里使用了 Bootstrap 5 的类
 
             // 将文件名称、文件大小、上传者以及上传时间添加到文件列表中
             li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
             li.appendChild(a);
             li.appendChild(span);
-            li.appendChild(p);
+            // li.appendChild(p);
             fileList.appendChild(li);
           }
         });
