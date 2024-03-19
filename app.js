@@ -1,4 +1,3 @@
-const ini = require('ini');//引入需要的模块
 const fs = require('fs');//引入需要的模块
 
 // 自定义动态模块引入
@@ -9,25 +8,15 @@ const WebsocketModule = require('./Server/Websocket-chat-server');
 console.time('程序已启动成功，启动耗时'); // 开始计时
 
 
-// 读取config.ini文件中的端口信息
 function readConfig() {
-  const configPath = 'Config.ini';
+  const configPath = 'config.json';
   if (!fs.existsSync(configPath)) {
-    // 如果config.ini文件不存在，就创建一个默认的config.ini文件并写入默认端口信息
-    try {
-      const defaultConfig = {
-        SeverPort: 11452, // 默认端口号
-      };
-      fs.writeFileSync(configPath, ini.stringify(defaultConfig));
-      return defaultConfig.SeverPort;
-    } catch (error) {
-      console.error('Error creating config.ini file:', error.message);
-      return null;
-    }
+    console.error('config.json文件不存在，无法读取配置信息');
+    return null;
   } else {
-    // 如果config.ini文件存在，就读取其中的端口信息
+    // 如果config.json文件存在，就读取其中的端口信息
     try {
-      const config = ini.parse(fs.readFileSync(configPath, 'utf-8'));
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
       if (config.SeverPort) {
         return config.SeverPort;
       } else {
@@ -64,6 +53,6 @@ app.listen({port}, '0.0.0.0', () => {
     -----------------------------------
     `);
     console.log(`
-        注意：你可以在程序目录下自动生成的Config.ini文件中更改一定设置.`)
+        注意：你可以在程序目录下自动生成的Config.json文件中更改一定设置.`)
  console.log(``)
 });
