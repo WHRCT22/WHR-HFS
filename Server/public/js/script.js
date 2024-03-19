@@ -99,10 +99,10 @@ submitButton.addEventListener("click", function(event) {
 });
 
   // 当前页码
-  var currentPageNumber = 1; //默认的页数，将在后续获取JSON时动态更新
+  var currentPageNumber = 1; //默认的显示的当前页数
 
   // 总页数
-  var totalPages = 1; //默认的页数，将在后续获取JSON时动态更新
+  var totalPages = 1; //默认的总共页数，将在后续获取JSON时动态更新
 
 function refreshFileList(pageNumber) {
   var fileList = document.getElementById("file-list");
