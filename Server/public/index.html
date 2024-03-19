@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="WHR-HFS官方网站，文件上传网站，免费公共的文件上传网站">
@@ -10,74 +11,51 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="js/block-ie.js"></script>
+    <script src="js/block-ie.js">
+    </script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.min.js">
+    </script>
     <title>WHR文件服务中心</title>
-    <style>
- 
-    body {
-      overflow-x: hidden ;
-      }
-  .error-message {
-  background-color: #f8d7da; /* 设置背景颜色 */
-  color: #721c24; /* 设置文字颜色 */
-  padding: 10px; /* 设置内边距 */
-  margin: 10px 0; /* 设置外边距 */
-  border: 1px solid #f5c6cb; /* 设置边框 */
-  border-radius: 5px; /* 设置边框圆角 */
-}
-.page-item.active .page-link {
-  z-index: 1;
-  color: #fff; /* 设置激活状态下的文字颜色 */
-  background-color: #007bff; /* 设置激活状态下的背景颜色 */
-  border-color: #007bff; /* 设置激活状态下的边框颜色 */
-}
-#error-message {
-  display: none;
-}
-
-    </style>
-</head>
-<body>
+    <style>body { overflow-x: hidden ; } .error-message { background-color: #f8d7da; /* 设置背景颜色 */ color: #721c24; /* 设置文字颜色 */ padding: 10px; /* 设置内边距 */ margin: 10px 0; /* 设置外边距 */ border: 1px solid #f5c6cb; /* 设置边框 */ border-radius: 5px; /* 设置边框圆角 */ } .page-item.active .page-link { z-index: 1; color: #fff; /* 设置激活状态下的文字颜色 */ background-color: #007bff; /* 设置激活状态下的背景颜色 */ border-color: #007bff; /* 设置激活状态下的边框颜色 */ } #error-message { display: none; }</style>
+  </head>
+  
+  <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-<div class="container-fluid">
-    <a class="navbar-brand" href="#">
-        <img src="favicon.ico" alt="icon">WHR-文件服务中心
-    </a>
-    <div class="btn-group ml-auto" role="group" aria-label="Login and Register">
-        <a href="/register" class="btn btn-outline-secondary">注册</a>
-        <a href="/login" class="btn btn-outline-secondary">登录</a>
-    </div>
-</div>
-        </nav>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="favicon.ico" alt="icon">WHR-文件服务中心</a>
+          <div class="btn-group ml-auto" role="group" aria-label="Login and Register">
+            <a href="/register" class="btn btn-outline-secondary">注册</a>
+            <a href="/login" class="btn btn-outline-secondary">登录</a>
+          </div>
+        </div>
+      </nav>
     </header>
     <div class="container mt-5">
-        <h2 class="text-center mb-5">WHR-HFS文件中心</h2>
+      <h2 class="text-center mb-5">WHR-HFS文件中心</h2>
     </div>
     <div class="row mt-3">
-        <div class="col-md-6 offset-md-3">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="搜索文件...（文件大小，后缀名等）" aria-label="搜索文件" aria-describedby="button-addon">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon">
-                    <img src="svg/search.svg" alt="搜索" width="20" height="20">
-                </button>
-            </div>
+      <div class="col-md-6 offset-md-3">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="搜索文件...（文件大小，后缀名等）" aria-label="搜索文件" aria-describedby="button-addon">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon">
+            <img src="svg/search.svg" alt="搜索" width="20" height="20">
+          </button>
         </div>
-    </div>
-    <div id="no-results" class="text-center mt-3" style="display: none;">
-        未在此页的数据中检索到包含指定文件名的文件
       </div>
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <ul id="file-list" class="list-group">
-                </ul>
-            </div>
-        </div>
-<div class="pagination-container mt-3 mb-3">
-    <nav aria-label="Page navigation">
+    </div>
+    <div id="no-results" class="text-center mt-3" style="display: none;">未在此页的数据中检索到包含指定文件名的文件</div>
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <ul id="file-list" class="list-group">
+        </ul>
+      </div>
+    </div>
+    <div class="pagination-container mt-3 mb-3">
+      <nav aria-label="Page navigation">
         <ul id="pagination" class="pagination justify-content-center">
           <li class="page-item" id="previous-page">
             <a class="page-link" href="#" aria-label="Previous">
@@ -91,30 +69,33 @@
           </li>
         </ul>
       </nav>
-  </div>
-        <div class="row mt-5">
-            <div class="col-md-6 offset-md-3">
-                <form action="/WHR-HFS-API/Upload" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <input class="form-control" type="file" id ="filesinputupload" name="file" multiple>
-                    </div>
-                    <div id="error-message" class="alert alert-danger" role="alert"></div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">
-                            <img src="svg/cloud-upload.svg" alt="文件图标" width="16" height="16" style="filter: invert(1);"/>
-                            上传文件
-                          </button>
-                          <div id="fileUploadStatus" class="form-text"></div>
-                    </div>
-                </form>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6 offset-md-3">
+        <form action="/WHR-HFS-API/Upload" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <input class="form-control" type="file" id="filesinputupload" name="file" multiple>
+          </div>
+          <div id="error-message" class="alert alert-danger" role="alert">
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+              <img src="svg/cloud-upload.svg" alt="文件图标" width="16" height="16" style="filter: invert(1);" />上传文件</button>
+            <div id="fileUploadStatus" class="form-text">
             </div>
-        </div>
+          </div>
+        </form>
+      </div>
+    </div>
     <footer class="text-center mt-3">
-        <a href="/about" target="_blank">About页面</a> 或者 <a href="/chat" target="_blank">聊天室</a>
-     <!--   <br>
-              <div id="runtime"></div>
-     -->
+      <a href="/about" target="_blank">About页面</a>或者
+      <a href="/chat" target="_blank">聊天室</a>
+      <!-- <br>
+      <div id="runtime"></div>
+      -->
     </footer>
-</body>
-<script src="js/script.js"></script>
+  </body>
+  <script src="js/script.js">
+  </script>
+
 </html>
