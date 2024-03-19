@@ -18,7 +18,7 @@
     <script src="js/bootstrap.min.js">
     </script>
     <title>WHR文件服务中心</title>
-    <style>body { overflow-x: hidden ; } .error-message { background-color: #f8d7da; /* 设置背景颜色 */ color: #721c24; /* 设置文字颜色 */ padding: 10px; /* 设置内边距 */ margin: 10px 0; /* 设置外边距 */ border: 1px solid #f5c6cb; /* 设置边框 */ border-radius: 5px; /* 设置边框圆角 */ } .page-item.active .page-link { z-index: 1; color: #fff; /* 设置激活状态下的文字颜色 */ background-color: #007bff; /* 设置激活状态下的背景颜色 */ border-color: #007bff; /* 设置激活状态下的边框颜色 */ } #error-message { display: none; }</style>
+    <style>body { overflow-x: hidden ; } .error-message { background-color: #f8d7da; /* 设置背景颜色 */ color: #721c24; /* 设置文字颜色 */ padding: 10px; /* 设置内边距 */ margin: 10px 0; /* 设置外边距 */ border: 1px solid #f5c6cb; /* 设置边框 */ border-radius: 5px; /* 设置边框圆角 */ } .page-item.active .page-link { z-index: 1; color: #fff; /* 设置激活状态下的文字颜色 */ background-color: #007bff; /* 设置激活状态下的背景颜色 */ border-color: #007bff; /* 设置激活状态下的边框颜色 */ } #error-message { display: none; } #toggleDarkModeContainer { padding: 10px; text-align: center; }</style>
   </head>
   
   <body>
@@ -87,9 +87,15 @@
         </form>
       </div>
     </div>
+    <!-- 在页面中引入两种不同的样式表 -->
+    <link id="lightTheme" href="css/light-theme.css" rel="stylesheet">
+    <link id="darkTheme" href="css/dark-theme.css" rel="stylesheet" disabled>
     <footer class="text-center mt-3">
       <a href="/about" target="_blank">About页面</a>或者
       <a href="/chat" target="_blank">聊天室</a>
+      <div id="toggleDarkModeContainer" class="mt-3">
+        <button id="toggleDarkModeBtn" type="button" class="btn btn-primary">切换全局主题</button>
+      </div>
       <!-- <br>
       <div id="runtime"></div>
       -->

@@ -1,36 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>登录页面</title>
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <style>
-html, body {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    html,
+    body {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-.container {
-  max-width: 400px;
-  width: 100%;
-  text-align: center; /* 水平居中 */
-}
+    .container {
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      /* 水平居中 */
+    }
   </style>
 </head>
+
 <body>
- <div class="modal fade" id="loginSuccessModal" tabindex="-1" aria-labelledby="loginSuccessModalLabel" aria-hidden="true">
+  <div class="modal fade" id="loginSuccessModal" tabindex="-1" aria-labelledby="loginSuccessModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="loginSuccessModalLabel">登录状况</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          </button>
         </div>
         <div class="modal-body">
           <!-- 用于显示登录成功的数据 -->
-          <div id="loginSuccessData"></div>
+          <div id="loginSuccessData">
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
@@ -38,103 +44,136 @@ html, body {
       </div>
     </div>
   </div>
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">登录至WHR-HFS账户</h2>
+    <form>
+      <div class="mb-3">
+        <label for="username" class="form-label">用户名</label>
+        <input type="text" class="form-control" id="username">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">密码</label>
+        <input type="password" class="form-control" id="password">
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">登录-Now！</button>
+      </div>
+      <div class="text-center mt-3">
+        <p>还没注册？ <a href="/register" style="color: #5fc6e1;">点击这里注册</a></p>
+      </div>
+    </form>
+  </div>
+  <script src="js/bootstrap.min.js">
+  </script>
+  <script>
+    // 登录JS开始
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
 
-<div class="container mt-5">
-  <h2 class="text-center mb-4">登录至WHR-HFS账户</h2>
-  <form>
-    <div class="mb-3">
-      <label for="username" class="form-label">用户名</label>
-      <input type="text" class="form-control" id="username">
-    </div>
-    <div class="mb-3">
-      <label for="password" class="form-label">密码</label>
-      <input type="password" class="form-control" id="password">
-    </div>
-    <div class="d-grid">
-      <button type="submit" class="btn btn-primary">登录-Now！</button>
-    </div>
-<div class="text-center mt-3">
-  <p>还没注册？ <a href="/register" style="color: #5fc6e1;">点击这里注册</a></p>
-</div>
-  </form>
-</div>
- <script src="js/bootstrap.min.js"></script>
-<script>
+      form.addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止默认的表单提交行为
 
-// 登录JS开始
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.querySelector('form');
+        // 获取输入的用户名和密码
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
-  form.addEventListener('submit', function(event) {
-    event.preventDefault(); // 阻止默认的表单提交行为
+        // 添加验证条件
+        if (username.length < 3) {
+          alert('登录的用户名必须至少包含3个字符');
+          return;
+        }
 
-    // 获取输入的用户名和密码
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+        if (password.length < 8 || !/\d/.test(password)) {
+          alert('登录的密码密码必须至少包含8个字符并且包含至少一个数字');
+          return;
+        }
 
+        // 使用 Fetch API 发送 POST 请求
+        fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username,
+            password
+          })
+        }).then(response => {
+          if (response.status === 200) {
+            return response.text();
+          } else {
+            throw new Error('登录失败');
+          }
+        }).then(data => {
+          // 显示登录成功的数据
+          document.getElementById('loginSuccessData').textContent = data;
 
-    // 添加验证条件
-    if (username.length < 3) {
-      alert('登录的用户名必须至少包含3个字符');
-      return;
-    }
+          // 显示登录成功模态框
+          const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'), {
+            keyboard: false // 防止用户按下 Esc 键关闭模态框
+          });
+          loginSuccessModal.show();
 
-    if (password.length < 8 || !/\d/.test(password)) {
-      alert('登录的密码密码必须至少包含8个字符并且包含至少一个数字');
-      return;
-    }
+          // 登录成功后将用户名保存到 localStorage
+          localStorage.setItem('username', username);
 
-    // 使用 Fetch API 发送 POST 请求
-    fetch('/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ username, password })
-    })
-    .then(response => {
-      if (response.status === 200) {
-        return response.text();
-      } else {
-        throw new Error('登录失败');
-      }
-    })
-    .then(data => {
-      // 显示登录成功的数据
-      document.getElementById('loginSuccessData').textContent = data;
+          // 监听模态框关闭事件
+          loginSuccessModal._element.addEventListener('hidden.bs.modal', function() {
+            // 关闭后自动跳转到 /
+            window.location.href = '/';
+          });
+        }).catch(error => {
+          console.error('Error:', error);
+          document.getElementById('loginSuccessData').textContent = error;
 
-      // 显示登录成功模态框
-      const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'), {
-        keyboard: false // 防止用户按下 Esc 键关闭模态框
+          // 显示模态框
+          const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'), {
+            keyboard: false // 防止用户按下 Esc 键关闭模态框
+          });
+          loginSuccessModal.show();
+
+          // 清空输入框的值
+          document.getElementById('username').value = '';
+          document.getElementById('password').value = '';
+        });
       });
-      loginSuccessModal.show();
-
-      // 登录成功后将用户名保存到 localStorage
-      localStorage.setItem('username', username);
-
-      // 监听模态框关闭事件
-          loginSuccessModal._element.addEventListener('hidden.bs.modal', function () {
-         // 关闭后自动跳转到 /
-          window.location.href = '/';
-});
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      document.getElementById('loginSuccessData').textContent = error;
-
-      // 显示模态框
-      const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'), {
-        keyboard: false // 防止用户按下 Esc 键关闭模态框
-      });
-      loginSuccessModal.show();
-
-  // 清空输入框的值
-  document.getElementById('username').value = '';
-  document.getElementById('password').value = '';
-
     });
-  });
-});
-</script>
-</body>
+
+    //主题选择
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
+      const lightTheme = document.getElementById('lightTheme');
+      const darkTheme = document.getElementById('darkTheme');
+
+      // 检查本地存储中是否存在主题模式设置
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        darkTheme.disabled = false;
+        lightTheme.disabled = true;
+      } else {
+        darkTheme.disabled = true;
+        lightTheme.disabled = false;
+      }
+
+      // 添加点击事件监听器，切换主题模式，并保存到本地存储
+      toggleDarkModeBtn.addEventListener('click', function() {
+        if (lightTheme.disabled) {
+          // 当前是暗夜模式，切换到日间模式
+          lightTheme.disabled = false;
+          darkTheme.disabled = true;
+          localStorage.setItem('theme', 'light');
+        } else {
+          // 当前是日间模式，切换到暗夜模式
+          lightTheme.disabled = true;
+          darkTheme.disabled = false;
+          localStorage.setItem('theme', 'dark');
+        }
+      });
+    });
+  </script>
+  <!-- 在页面中引入两种不同的样式表 -->
+  <link id="lightTheme" href="css/light-theme.css" rel="stylesheet">
+  <link id="darkTheme" href="css/dark-theme.css" rel="stylesheet" disabled>
+  </body>
+
 </html>

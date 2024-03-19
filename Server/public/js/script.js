@@ -291,6 +291,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+//主题选择
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
+  const lightTheme = document.getElementById('lightTheme');
+  const darkTheme = document.getElementById('darkTheme');
+
+  // 检查本地存储中是否存在主题模式设置
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    darkTheme.disabled = false;
+    lightTheme.disabled = true;
+  } else {
+    darkTheme.disabled = true;
+    lightTheme.disabled = false;
+  }
+
+  // 添加点击事件监听器，切换主题模式，并保存到本地存储
+  toggleDarkModeBtn.addEventListener('click', function() {
+    if (lightTheme.disabled) {
+      // 当前是暗夜模式，切换到日间模式
+      lightTheme.disabled = false;
+      darkTheme.disabled = true;
+      localStorage.setItem('theme', 'light');
+    } else {
+      // 当前是日间模式，切换到暗夜模式
+      lightTheme.disabled = true;
+      darkTheme.disabled = false;
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+});
+
 
 // 后台程序启动时间
 // function formatRuntime(milliseconds) {

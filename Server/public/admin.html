@@ -2,94 +2,117 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理面板</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理面板</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>管理面板</h1>
-        <div class="alert alert-warning" role="alert">
-            管理面板,只有验证用户才能访问该页面
-        </div>
-        <div class="card">
-            <div class="card-header">
-                文件管理
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">文件列表</h5>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">文件名</th>
-                            <th scope="col">大小</th>
-                            <th scope="col">上传日期</th>
-                            <th scope="col">上传者</th> <!-- 添加上传者一列 -->
-                            <th scope="col">行动</th>
-                        </tr>
-                    </thead>
-                    <tbody id="fileListTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="container">
+    <h1>管理面板</h1>
+    <div class="alert alert-warning" role="alert">管理面板,只有验证用户才能访问该页面</div>
+    <div class="card">
+      <div class="card-header">文件管理</div>
+      <div class="card-body">
+        <h5 class="card-title">文件列表</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">文件名</th>
+              <th scope="col">大小</th>
+              <th scope="col">上传日期</th>
+              <th scope="col">上传者</th>
+              <!-- 添加上传者一列 -->
+              <th scope="col">行动</th>
+            </tr>
+          </thead>
+          <tbody id="fileListTableBody">
+          </tbody>
+        </table>
+      </div>
     </div>
-    <script src="js/bootstrap.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const token = localStorage.getItem('username');
-            if (!token) {
-                window.location.href = '/login'; // 未经验证的重定向到登录页面
-            } else {
-                // 获取文件列表
-                fetch("/WHR-HFS-API/Files-list")
-                    .then(response => response.json())
-                    .then(data => {
-                        const fileListTableBody = document.getElementById("fileListTableBody");
-                        data.files.forEach(file => {
-                            const row = document.createElement("tr");
-                            row.innerHTML = `
-                            <td>${file.name}</td>
-                            <td>${file.size} 字节</td>
-                            <td>${file.uploadTime}</td>
-                            <td>${file.uploader}</td> <!-- 显示上传者 -->
-                            <td>
-                                <a href="/WHR-HFS-API/Download/${file.name}" class="btn btn-primary" download>下载</a>
-                                <button onclick="deleteFile('${file.name}')" class="btn btn-danger">删除</button>
-                            </td>
-                        `;
-                            fileListTableBody.appendChild(row);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('获取文件列表时出错:', error);
-                        alert('获取文件列表时发生错误。');
-                    });
-            }
-        });
+  </div>
+  <script src="js/bootstrap.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const token = localStorage.getItem('username');
+      if (!token) {
+        window.location.href = '/login'; // 未经验证的重定向到登录页面
+      } else {
+        // 获取文件列表
+        fetch("/WHR-HFS-API/Files-list")
+          .then(response => response.json())
+          .then(data => {
+            const fileListTableBody = document.getElementById("fileListTableBody");
+            data.files.forEach(file => {
+              const row = document.createElement("tr");
+              row.innerHTML = `<td>${file.name}</td><td>${file.size} 字节</td><td>${file.uploadTime}</td><td>${file.uploader}</td><td><a href="/WHR-HFS-API/Download/${file.name}" class="btn btn-primary" download>下载</a><button onclick="deleteFile('${file.name}')" class="btn btn-danger">删除</button></td>`;
+              fileListTableBody.appendChild(row);
+            });
+          })
+          .catch(error => {
+            console.error('获取文件列表时出错:', error);
+            alert('获取文件列表时发生错误。');
+          });
+      }
+    });
 
-        function deleteFile(filename) {
-            const token = localStorage.getItem('token');
-            fetch(`/admin/delete/${filename}`)
-                .then(response => response.text())
-                .then(data => {
-                    alert(data); // 显示删除消息提示
-                    // 删除后刷新文件列表
-                    location.reload();
-                })
-                .catch(error => {
-                    console.error('删除文件时出错:', error);
-                    alert('删除文件时发生错误。');
-                });
+    function deleteFile(filename) {
+      const token = localStorage.getItem('token');
+      fetch(`/admin/delete/${filename}`)
+        .then(response => response.text())
+        .then(data => {
+          alert(data); // 显示删除消息提示
+          // 删除后刷新文件列表
+          location.reload();
+        })
+        .catch(error => {
+          console.error('删除文件时出错:', error);
+          alert('删除文件时发生错误。');
+        });
+    }
+
+    //主题选择
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
+      const lightTheme = document.getElementById('lightTheme');
+      const darkTheme = document.getElementById('darkTheme');
+
+      // 检查地存储中是否存在主题模式设置
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        darkTheme.disabled = false;
+        lightTheme.disabled = true;
+      } else {
+        darkTheme.disabled = true;
+        lightTheme.disabled = false;
+      }
+
+      // 添加点击事件监听器，切换主题模式，并保存到本地存储
+      toggleDarkModeBtn.addEventListener('click', function() {
+        if (lightTheme.disabled) {
+          // 当前是暗夜模式，切换到日间模式
+          lightTheme.disabled = false;
+          darkTheme.disabled = true;
+          localStorage.setItem('theme', 'light');
+        } else {
+          // 当前是日间模式，切换到暗夜模式
+          lightTheme.disabled = true;
+          darkTheme.disabled = false;
+          localStorage.setItem('theme', 'dark');
         }
-    </script>
+      });
+    });
+  </script>
+  <!-- 在页面中引入两种不同的样式表 -->
+  <link id="lightTheme" href="css/light-theme.css" rel="stylesheet">
+  <link id="darkTheme" href="css/dark-theme.css" rel="stylesheet" disabled>
 </body>
 
 </html>

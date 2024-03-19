@@ -1,0 +1,65 @@
+body {
+  background-color: #211c1c;
+}
+.list-group-item {
+      background-color: #161212;
+    }
+
+.form-control {
+   background-color: #675f5f;
+    }
+
+* {
+      margin: 0;
+    padding: 0;
+    line-height: 1.8;
+    overflow-wrap: break-word;
+    outline: none;
+    color: #615a5a;
+}
+
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #515965;
+    --bs-btn-border-color: #0d6efd;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #0b5ed7;
+    --bs-btn-hover-border-color: #0a58ca;
+    --bs-btn-focus-shadow-rgb: 49,132,253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #0a58ca;
+    --bs-btn-active-border-color: #0a53be;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #0d6efd;
+    --bs-btn-disabled-border-color: #0d6efd;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #007bff9c;
+    border-color: #29313b;
+}
+
+/* 暗黑模式下链接样式 */
+a {
+    color: rgba(255, 255, 255, 0.8); /* 设置链接文本颜色为白色，可以根据实际需要调整 */
+}
+
+.navbar {
+    display: none;  /* 隐藏整个导航栏 */
+}
+.navbar .greeting {
+    display: block;  /* 显示欢迎信息 */
+}
+
+
+
+.card {
+    background-color: #222;
+}
+
+.table {
+    --bs-table-bg: #00000085;
+}

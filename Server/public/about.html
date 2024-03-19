@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+  
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="WHR-HFS官方网站，文件上传网站，免费公共的文件上传网站">
@@ -13,25 +14,63 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>关于</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+  </head>
+  
+  <body>
     <div class="container my-5">
-        <h1 class="text-center mb-4">关于WHR-HFS</h1>
-        <div class="card">
-            <div class="card-body">
-                <p>本程序由 @王浩瑞 开发，您当前运行的版本为2024年1月24日编译</p>
-                <p>本程序的功能是在局域网或广域网传输文件以及聊天</p>
-                <p>本程序基于NodeJS驱动，使用了以下的框架:</p>
-                <ul>
-                    <li>Express（Express 是一个Node.js Web 应用程序开发框架,快速方便地创建强大的 API。）</li>
-                    <li>Multer（Multer是一个 Node.js 中间件,用于处理 multipart/form-data 类型的表单数据,它主要用于上传文件。）</li>
-                    <li>WebSocket（Websocket是一种用于H5浏览器的实时通讯协议,可以做到数据的实时推送。）</li>
-                    <li>Qrcode-terminal（一个在控制台生成二维码的模块。）</li>
-                    <li>Http-Proxy-Middleware（Http-Proxy-Middleware用于后台将请求转发给其他域。）</li>
-                    <li>NodeJS中的自带函数及框架</li>
-                </ul>
-            </div>
+      <h1 class="text-center mb-4">关于WHR-HFS</h1>
+      <div class="card">
+        <div class="card-body">
+          <p>本程序由 @王浩瑞 开发，您当前运行的版本为2024年1月24日编译</p>
+          <p>本程序的功能是在局域网或广域网传输文件以及聊天</p>
+          <p>本程序基于NodeJS驱动，使用了以下的框架:</p>
+          <ul>
+            <li>Express（Express 是一个Node.js Web 应用程序开发框架,快速方便地创建强大的 API。）</li>
+            <li>Multer（Multer是一个 Node.js 中间件,用于处理 multipart/form-data 类型的表单数据,它主要用于上传文件。）</li>
+            <li>WebSocket（Websocket是一种用于H5浏览器的实时通讯协议,可以做到数据的实时推送。）</li>
+            <li>Qrcode-terminal（一个在控制台生成二维码的模块。）</li>
+            <li>Http-Proxy-Middleware（Http-Proxy-Middleware用于后台将请求转发给其他域。）</li>
+            <li>NodeJS中的自带函数及框架</li>
+          </ul>
         </div>
+      </div>
     </div>
-</body>
+    <script>//主题选择
+      document.addEventListener('DOMContentLoaded',
+      function() {
+        const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
+        const lightTheme = document.getElementById('lightTheme');
+        const darkTheme = document.getElementById('darkTheme');
+
+        // 检查本地存储中是否存在主题模式设置
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+          darkTheme.disabled = false;
+          lightTheme.disabled = true;
+        } else {
+          darkTheme.disabled = true;
+          lightTheme.disabled = false;
+        }
+
+        // 添加点击事件监听器，切换主题模式，并保存到本地存储
+        toggleDarkModeBtn.addEventListener('click',
+        function() {
+          if (lightTheme.disabled) {
+            // 当前是暗夜模式，切换到日间模式
+            lightTheme.disabled = false;
+            darkTheme.disabled = true;
+            localStorage.setItem('theme', 'light');
+          } else {
+            // 当前是日间模式，切换到暗夜模式
+            lightTheme.disabled = true;
+            darkTheme.disabled = false;
+            localStorage.setItem('theme', 'dark');
+          }
+        });
+      });</script>
+    <!-- 在页面中引入两种不同的样式表 -->
+    <link id="lightTheme" href="css/light-theme.css" rel="stylesheet">
+    <link id="darkTheme" href="css/dark-theme.css" rel="stylesheet" disabled>
+  </body>
+
 </html>
