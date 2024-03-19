@@ -292,56 +292,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // 后台程序启动时间
-function formatRuntime(milliseconds) {
-  const timeInSeconds = Math.floor(milliseconds / 1000);
-  if (timeInSeconds < 60) {
-    return `${timeInSeconds} 秒`;
-  } else {
-    const timeInMinutes = Math.floor(timeInSeconds / 60);
-    if (timeInMinutes < 60) {
-      const remainingSeconds = timeInSeconds % 60;
-      return `${timeInMinutes} 分钟 ${remainingSeconds} 秒`;
-    } else {
-      const timeInHours = Math.floor(timeInMinutes / 60);
-      const remainingMinutes = timeInMinutes % 60;
-      if (timeInHours < 24) {
-        return `${timeInHours} 小时 ${remainingMinutes} 分钟`;
-      } else {
-        const timeInDays = Math.floor(timeInHours / 24);
-        const remainingHours = timeInHours % 24;
-        if (timeInDays < 365) {
-          return `${timeInDays} 天 ${remainingHours} 小时`;
-        } else {
-          const timeInYears = Math.floor(timeInDays / 365);
-          const remainingDays = timeInDays % 365;
-          return `${timeInYears} 年 ${remainingDays} 天`;
-        }
-      }
-    }
-  }
-}
+// function formatRuntime(milliseconds) {
+//   const timeInSeconds = Math.floor(milliseconds / 1000);
+//   if (timeInSeconds < 60) {
+//     return `${timeInSeconds} 秒`;
+//   } else {
+//     const timeInMinutes = Math.floor(timeInSeconds / 60);
+//     if (timeInMinutes < 60) {
+//       const remainingSeconds = timeInSeconds % 60;
+//       return `${timeInMinutes} 分钟 ${remainingSeconds} 秒`;
+//     } else {
+//       const timeInHours = Math.floor(timeInMinutes / 60);
+//       const remainingMinutes = timeInMinutes % 60;
+//       if (timeInHours < 24) {
+//         return `${timeInHours} 小时 ${remainingMinutes} 分钟`;
+//       } else {
+//         const timeInDays = Math.floor(timeInHours / 24);
+//         const remainingHours = timeInHours % 24;
+//         if (timeInDays < 365) {
+//           return `${timeInDays} 天 ${remainingHours} 小时`;
+//         } else {
+//           const timeInYears = Math.floor(timeInDays / 365);
+//           const remainingDays = timeInDays % 365;
+//           return `${timeInYears} 年 ${remainingDays} 天`;
+//         }
+//       }
+//     }
+//   }
+// }
 
-function updateRuntime() {
-  fetch('/runtime')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('请求失败');
-      }
-      return response.json();
-    })
-    .then(data => {
-      const runtimeElement = document.getElementById('runtime');
-      runtimeElement.textContent = `WHR-HFS后端已运行：${formatRuntime(data.runtime)}`;
-      runtimeElement.style.color = 'black';
-    })
-    .catch(error => {
-      console.error('请求失败:', error);
-      const runtimeElement = document.getElementById('runtime');
-      runtimeElement.textContent = `服务器无法响应，错误信息：${error.message}`;
-      runtimeElement.style.color = 'red';
-    });
-}
+// function updateRuntime() {
+//   fetch('/runtime')
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error('请求失败');
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       const runtimeElement = document.getElementById('runtime');
+//       runtimeElement.textContent = `WHR-HFS后端已运行：${formatRuntime(data.runtime)}`;
+//       runtimeElement.style.color = 'black';
+//     })
+//     .catch(error => {
+//       console.error('请求失败:', error);
+//       const runtimeElement = document.getElementById('runtime');
+//       runtimeElement.textContent = `服务器无法响应，错误信息：${error.message}`;
+//       runtimeElement.style.color = 'red';
+//     });
+// }
 
 // 初次加载页面时先请求一次，之后每隔1秒重新请求并替换显示的数据
-updateRuntime();
-setInterval(updateRuntime, 1000);  // 每1秒执行一次updateRuntime函数
+// updateRuntime();
+// setInterval(updateRuntime, 1000);  // 每1秒执行一次updateRuntime函数
