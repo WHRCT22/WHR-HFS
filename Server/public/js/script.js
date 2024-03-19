@@ -93,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (fileInput.files.length === 0) {
             event.preventDefault();
             document.getElementById('error-message').innerHTML = '请选择一个文件来进行上传操作';
+            fileInput.disabled = true;
             document.getElementById('error-message').style.display = 'block';
             // 2.3秒后隐藏错误消息
             setTimeout(function() {
