@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 改变上传文件按钮的文字
     const uploadButton = document.querySelector('button[type="submit"]');
-    uploadButton.textContent = '请先登录后再进行上传';
+    uploadButton.textContent = '🙂请登录后再进行上传';
   }
 });
 
