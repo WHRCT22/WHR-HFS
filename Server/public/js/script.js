@@ -5,57 +5,54 @@ document.addEventListener("DOMContentLoaded", function() {
     var fileInput = document.querySelector('input[type="file"]');
     var submitButton = document.querySelector('form[action="/WHR-HFS-API/Upload"] button[type="submit"]');
     form.addEventListener("submit", function(event) {
-
         // 禁用发送按钮
         submitButton.disabled = true;
-
         // 阻止默认的表单提交行为
         event.preventDefault();
-
         // 在文件上传之前，确保用户名字段不为空
         if (!localStorage.getItem('username')) {
             alert('请先登录');
         } else {
             var fileUploadStatus = document.getElementById('fileUploadStatus');
-            fileUploadStatus.innerHTML = `${fileInput.files[0].name} 正在上传...`;
+            var totalFiles = fileInput.files.length;
+            var filesProcessed = 0;
 
-            // 获取当前用户名
-            const username = localStorage.getItem('username');
+            // 上传每个文件
+            for (var i = 0; i < totalFiles; i++) {
+                var file = fileInput.files[i];
+                fileUploadStatus.innerHTML = `${file.name} 正在上传...`;
 
-            var formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-            formData.append('username', username); // 添加用户名数据
+                // 获取当前用户名
+                const username = localStorage.getItem('username');
+                var formData = new FormData();
+                formData.append('file', file);
+                formData.append('username', username); // 添加用户名数据
 
-            fetch('/WHR-HFS-API/Upload', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.text())
-                .then(data => {
-
-                    // 移除文件名 + 正在上传...的文本
-                    fileUploadStatus.innerHTML = '';
-                    refreshFileList(currentPageNumber); // 显示默认文件页码
-                    fileInput.value = '';
-
-                    var audio = new Audio('/sound/notification_sound.wav');
-                    audio.play();
-
-                    // 启用发送按钮
-                    submitButton.disabled = false;
-
-                })
-                .catch(error => {
-                    // 文件上传失败的回调
-                    console.error('文件上传出错！', error);
-                    // 在发生错误时也要确保启用发送按钮
-                    submitButton.disabled = false;
-                    // 处理失败的情况
-                })
-                .finally(() => {
-                    // 启用提交按钮
-                    submitButton.disabled = false;
-                });
+                // 使用fetch API进行文件上传
+                fetch('/WHR-HFS-API/Upload', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        // 文件上传成功的回调
+                        filesProcessed++;
+                        if (filesProcessed === totalFiles) {
+                            // 如果所有文件都已处理完，则清空上传状态并刷新文件列表
+                            fileUploadStatus.innerHTML = '';
+                            refreshFileList(currentPageNumber); // 显示默认文件页码
+                            fileInput.value = '';
+                            submitButton.disabled = false; // 启用发送按钮
+                        }
+                    })
+                    .catch(error => {
+                        // 文件上传失败的回调
+                        console.error('文件上传出错！', error);
+                        // 处理失败的情况
+                        fileUploadStatus.innerHTML = `文件上传出错：${file.name}`;
+                        submitButton.disabled = false; // 启用发送按钮
+                    })
+            }
         }
     });
 
@@ -93,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (fileInput.files.length === 0) {
             event.preventDefault();
             document.getElementById('error-message').innerHTML = '请选择一个文件来进行上传操作';
-            fileInput.disabled = true;
             document.getElementById('error-message').style.display = 'block';
             // 2.3秒后隐藏错误消息
             setTimeout(function() {
