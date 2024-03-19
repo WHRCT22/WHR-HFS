@@ -16,9 +16,9 @@ const fileModules = express();
 // console.log('');
 
 
-
+// 无用的逻辑
 // 记录程序启动时间
-const startTime = Date.now();
+// const startTime = Date.now();
 
 // 不适合在生产环境使用，会产生巨大的流量消耗
 // 将程序运行时间传递给前端
