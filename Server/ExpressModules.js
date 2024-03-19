@@ -20,11 +20,12 @@ const fileModules = express();
 // 记录程序启动时间
 const startTime = Date.now();
 
+// 不适合在生产环境使用，会产生巨大的流量消耗
 // 将程序运行时间传递给前端
-app.get('/runtime', (req, res) => {
-  const runtime = Date.now() - startTime;
-  res.json({ runtime });
-});
+// app.get('/runtime', (req, res) => {
+// const runtime = Date.now() - startTime;
+// res.json({ runtime });
+// });
 
 
 // 设置静态资源Base路径
