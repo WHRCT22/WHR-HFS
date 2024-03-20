@@ -78,37 +78,21 @@
         });
     }
 
-    //主题选择
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
-      const lightTheme = document.getElementById('lightTheme');
-      const darkTheme = document.getElementById('darkTheme');
+      document.addEventListener('DOMContentLoaded',
+      function() {
+        const lightTheme = document.getElementById('lightTheme');
+        const darkTheme = document.getElementById('darkTheme');
 
-      // 检查地存储中是否存在主题模式设置
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        darkTheme.disabled = false;
-        lightTheme.disabled = true;
-      } else {
-        darkTheme.disabled = true;
-        lightTheme.disabled = false;
-      }
-
-      // 添加点击事件监听器，切换主题模式，并保存到本地存储
-      toggleDarkModeBtn.addEventListener('click', function() {
-        if (lightTheme.disabled) {
-          // 当前是暗夜模式，切换到日间模式
-          lightTheme.disabled = false;
-          darkTheme.disabled = true;
-          localStorage.setItem('theme', 'light');
-        } else {
-          // 当前是日间模式，切换到暗夜模式
-          lightTheme.disabled = true;
+        // 检查本地存储中是否存在主题模式设置
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
           darkTheme.disabled = false;
-          localStorage.setItem('theme', 'dark');
+          lightTheme.disabled = true;
+        } else {
+          darkTheme.disabled = true;
+          lightTheme.disabled = false;
         }
       });
-    });
   </script>
   <!-- 在页面中引入两种不同的样式表 -->
   <link id="lightTheme" href="css/light-theme.css" rel="stylesheet">
