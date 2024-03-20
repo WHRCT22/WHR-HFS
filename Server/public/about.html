@@ -14,6 +14,76 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>关于</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>.project-info {
+  padding: 100px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  top: -50px;
+}
+
+.project-title {
+  font-weight: 500;
+  font-size: 1.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: black;
+}
+
+.lighter {
+  font-size: 0.9em;
+}
+
+
+.tag {
+  font-weight: lighter;
+  color: grey;
+}
+
+/*DELETE THIS TWO LINE*/
+.delete {
+  background-color: #b2b2fd;
+}
+
+.card-img div {
+  width: 90%;
+}
+/*IF USING IMAGES*/
+
+.card {
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+.card-img {
+  position: relative;
+  top: -20px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Change the .card-img div to .card-img img to use img*/
+.card-img a,
+.card-img div {
+  height: 150px;
+  width: 90%;
+  /* Change this width here to change the width of the color/image */
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.card-imgs {
+  transition: all 0.5s;
+}
+
+</style>
   </head>
   
   <body>
@@ -21,14 +91,14 @@
       <h1 class="text-center mb-4">关于WHR-HFS</h1>
       <div class="card">
         <div class="card-body">
-          <p>本程序由 @王浩瑞 开发，您当前运行的版本为2024年1月24日编译</p>
+          <p>本程序由 @王浩瑞 开发，您当前运行的版本为2024年3月20日编译</p>
           <p>本程序的功能是在局域网或广域网传输文件以及聊天</p>
           <p>本程序基于NodeJS驱动，使用了以下的框架:</p>
           <ul>
             <li>Express（Express 是一个Node.js Web 应用程序开发框架,快速方便地创建强大的 API。）</li>
+            <li>Sqlite3(sqlite3是一个进程内的库，实现了自给自足、无服务器、零配置、事务性的SQL数据库引擎。)
             <li>Multer（Multer是一个 Node.js 中间件,用于处理 multipart/form-data 类型的表单数据,它主要用于上传文件。）</li>
             <li>WebSocket（Websocket是一种用于H5浏览器的实时通讯协议,可以做到数据的实时推送。）</li>
-            <li>Qrcode-terminal（一个在控制台生成二维码的模块。）</li>
             <li>Http-Proxy-Middleware（Http-Proxy-Middleware用于后台将请求转发给其他域。）</li>
             <li>NodeJS中的自带函数及框架</li>
           </ul>
@@ -38,7 +108,6 @@
     <script>//主题选择
       document.addEventListener('DOMContentLoaded',
       function() {
-        const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
         const lightTheme = document.getElementById('lightTheme');
         const darkTheme = document.getElementById('darkTheme');
 
@@ -51,26 +120,30 @@
           darkTheme.disabled = true;
           lightTheme.disabled = false;
         }
-
-        // 添加点击事件监听器，切换主题模式，并保存到本地存储
-        toggleDarkModeBtn.addEventListener('click',
-        function() {
-          if (lightTheme.disabled) {
-            // 当前是暗夜模式，切换到日间模式
-            lightTheme.disabled = false;
-            darkTheme.disabled = true;
-            localStorage.setItem('theme', 'light');
-          } else {
-            // 当前是日间模式，切换到暗夜模式
-            lightTheme.disabled = true;
-            darkTheme.disabled = false;
-            localStorage.setItem('theme', 'dark');
-          }
-        });
       });</script>
     <!-- 在页面中引入两种不同的样式表 -->
     <link id="lightTheme" href="css/light-theme.css" rel="stylesheet">
     <link id="darkTheme" href="css/dark-theme.css" rel="stylesheet" disabled>
+
+    <article class="card">
+  <div class="card-img">
+    <div class="card-imgs pv delete"></div>
+  </div>
+
+  <div class="project-info">
+    <div class="flex">
+      <div class="project-title">About me</div>
+      <span class="tag">学生&老六技术员&班级电教委员</span>
+    </div>
+    <span class="lighter">
+      一名初三学生，在重庆就读，比较喜欢钻研前端技术和的后端技术<br>这个软件是我的练习项目,随缘更新
+      <br>
+      <a href="mailto:3540746063@qq.com">QQ邮箱</a>&nbsp&nbsp<a href="https://github.com/WHRCT22">Github账号</a>&nbsp&nbsp微信号:&nbsp<code>qq3540746063whr</code>
+      </span>
+  </div>
+</article>
+
+
   </body>
 
 </html>
