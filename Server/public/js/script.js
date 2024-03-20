@@ -57,31 +57,58 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 
-    document.querySelector(".form-control").addEventListener("input", function() {
-        var input, ul, li, a, i, txtValue, resultsFound;
-        input = this.value.toLowerCase();
-        ul = document.getElementById("file-list");
-        li = ul.getElementsByTagName("li");
-        resultsFound = false;
+    function searchFiles() {
+        var input = document.querySelector(".form-control").value.trim().toLowerCase(); // 获取输入的搜索内容并转为小写，同时移除首尾空格
+        if (input === '') {
+            // 如果搜索内容为空，则清除匹配效果并隐藏提示信息
+            clearSearchResults();
+            return;
+        }
 
-        for (i = 0; i < li.length; i++) {
-            a = li[i].innerText.toLowerCase();
-            if (a.indexOf(input) > -1) {
-                li[i].style.display = "";
-                resultsFound = true;
+        // 执行搜索功能
+        var ul = document.getElementById("file-list"); // 获取文件列表
+        var fileList = ul.getElementsByTagName("a"); // 获取文件列表中的<a>元素集合
+        var noResultsElement = document.getElementById("no-results"); // 获取提示信息元素
+        var resultsFound = false; // 初始化搜索结果为false
+
+        // 遍历文件列表中的每个文件链接
+        for (var i = 0; i < fileList.length; i++) {
+            var fileName = fileList[i].textContent.toLowerCase(); // 获取文件名并转为小写
+
+            // 判断当前文件是否匹配搜索内容
+            if (fileName.includes(input)) {
+                fileList[i].style.backgroundColor = "#5b6b8569"; // 使用浅灰色背景突出显示匹配部分
+                resultsFound = true; // 标记为找到匹配的文件
             } else {
-                li[i].style.display = "none";
+                fileList[i].style.backgroundColor = ""; // 清除背景颜色
             }
         }
 
         // 根据搜索结果状态来显示或隐藏提示信息
-        var noResultsElement = document.getElementById("no-results");
         if (resultsFound) {
-            noResultsElement.style.display = "none";
+            noResultsElement.style.display = "none"; // 隐藏提示信息
         } else {
-            noResultsElement.style.display = "block";
+            noResultsElement.style.display = "block"; // 显示提示信息
         }
-    });
+    }
+
+    // 清除搜索结果的函数
+    function clearSearchResults() {
+        var ul = document.getElementById("file-list"); // 获取文件列表
+        var fileList = ul.getElementsByTagName("a"); // 获取文件列表中的<a>元素集合
+        // 清除所有的搜索效果
+        for (var i = 0; i < fileList.length; i++) {
+            fileList[i].style.backgroundColor = ""; // 清除背景颜色
+        }
+
+        // 隐藏提示信息
+        var noResultsElement = document.getElementById("no-results");
+        noResultsElement.style.display = "none";
+    }
+
+    // 添加事件监听器，调用searchFiles函数
+    document.querySelector(".form-control").addEventListener("input", searchFiles);
+    setInterval(searchFiles, 250); // 每隔0.25秒调用一次searchFiles
 
 
     // 文件上传按钮点击事件
@@ -293,34 +320,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //主题选择
 document.addEventListener('DOMContentLoaded', function() {
-  const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
-  const lightTheme = document.getElementById('lightTheme');
-  const darkTheme = document.getElementById('darkTheme');
+    const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
+    const lightTheme = document.getElementById('lightTheme');
+    const darkTheme = document.getElementById('darkTheme');
 
-  // 检查本地存储中是否存在主题模式设置
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    darkTheme.disabled = false;
-    lightTheme.disabled = true;
-  } else {
-    darkTheme.disabled = true;
-    lightTheme.disabled = false;
-  }
-
-  // 添加点击事件监听器，切换主题模式，并保存到本地存储
-  toggleDarkModeBtn.addEventListener('click', function() {
-    if (lightTheme.disabled) {
-      // 当前是暗夜模式，切换到日间模式
-      lightTheme.disabled = false;
-      darkTheme.disabled = true;
-      localStorage.setItem('theme', 'light');
+    // 检查本地存储中是否存在主题模式设置
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        darkTheme.disabled = false;
+        lightTheme.disabled = true;
     } else {
-      // 当前是日间模式，切换到暗夜模式
-      lightTheme.disabled = true;
-      darkTheme.disabled = false;
-      localStorage.setItem('theme', 'dark');
+        darkTheme.disabled = true;
+        lightTheme.disabled = false;
     }
-  });
+
+    // 添加点击事件监听器，切换主题模式，并保存到本地存储
+    toggleDarkModeBtn.addEventListener('click', function() {
+        if (lightTheme.disabled) {
+            // 当前是暗夜模式，切换到日间模式
+            lightTheme.disabled = false;
+            darkTheme.disabled = true;
+            localStorage.setItem('theme', 'light');
+        } else {
+            // 当前是日间模式，切换到暗夜模式
+            lightTheme.disabled = true;
+            darkTheme.disabled = false;
+            localStorage.setItem('theme', 'dark');
+        }
+    });
 });
 
 
