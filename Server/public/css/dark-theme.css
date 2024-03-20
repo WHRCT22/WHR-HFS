@@ -1,58 +1,53 @@
 body {
-    background-color: #211c1c;
+    background-color:#211c1c;
 }
-
 .list-group-item {
-    background-color: #161212;
+    background-color:#161212;
 }
-
 .form-control {
-    background-color: #675f5f;
+    background-color:#675f5f;
 }
-
 * {
-    margin: 0;
-    padding: 0;
-    line-height: 1.8;
-    overflow-wrap: break-word;
-    outline: none;
-    color: #615a5a;
+    margin:0;
+    padding:0;
+    line-height:1.8;
+    overflow-wrap:break-word;
+    outline:none;
+    color:#615a5a;
 }
-
 .btn-primary {
-    --bs-btn-border-color: #5e789d;
-    --bs-btn-bg: #2f333b;
-    --bs-btn-hover-bg: #435165;
+    --bs-btn-border-color:#5e789d;
+    --bs-btn-bg:#2f333b;
+    --bs-btn-hover-bg:#435165;
 }
-
 .page-item.active .page-link {
-    z-index: 1;
-    color: #fff;
-    background-color: #525b6580;
-    border-color: #29313b;
+    z-index:1;
+    color:#fff;
+    background-color:#525b6580;
+    border-color:#29313b;
 }
-
 .page-link {
-    color: #414751;
+    color:#414751;
 }
-
 a {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
+    color:rgba(255,255,255,0.8);
+    text-decoration:none;
 }
-
 .pagination {
-    --bs-pagination-hover-color: #4770a9;
+    --bs-pagination-hover-color:#4770a9;
 }
-
 .navbar {
-    display: none;
+    display:none;
 }
-
 .card {
-    background-color: #222;
+    background-color:#222;
 }
-
 .table {
-    --bs-table-bg: #00000085;
+    --bs-table-bg:#00000085;
+}
+p {
+    color:#5f7483;
+}
+.text-muted {
+    color:rgb(169 178 187 / 75%)!important;
 }
