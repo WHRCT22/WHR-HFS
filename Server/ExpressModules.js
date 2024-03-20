@@ -86,10 +86,7 @@ app.get('/account', (req, res) => {
 app.get('/ie-blocked-page', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/ie-blocked-page.html'));
 });
-//注册页面
-app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/register.html'));
-});
+
 // 聊天室界面
 app.get('/chat', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/chat.html'));
