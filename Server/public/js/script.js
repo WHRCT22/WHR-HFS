@@ -38,8 +38,16 @@ document.addEventListener("DOMContentLoaded", function() {
                         // 文件上传成功的回调
                         filesProcessed++;
                         if (filesProcessed === totalFiles) {
-                            // 如果所有文件都已处理完，则清空上传状态并刷新文件列表
-                            fileUploadStatus.innerHTML = '';
+                        // 获取服务器返回的文本内容
+                            var serverResponse = data;
+
+                        // 替换正在上传的文本内容为服务器返回的文本内容
+                           fileUploadStatus.innerHTML = serverResponse;
+
+                        // 在3秒后清空上传状态
+                            setTimeout(function() {
+                              fileUploadStatus.innerHTML = '';
+                            }, 5000);
                             refreshFileList(currentPageNumber); // 显示默认文件页码
                             fileInput.value = '';
                             var audio = new Audio('/sound/notification_sound.wav');
