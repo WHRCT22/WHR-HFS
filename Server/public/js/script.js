@@ -42,6 +42,8 @@ document.addEventListener("DOMContentLoaded", function() {
                             fileUploadStatus.innerHTML = '';
                             refreshFileList(currentPageNumber); // 显示默认文件页码
                             fileInput.value = '';
+                            var audio = new Audio('/sound/notification_sound.wav');
+                            audio.play();
                             submitButton.disabled = false; // 启用发送按钮
                         }
                     })
