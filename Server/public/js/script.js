@@ -38,15 +38,15 @@ document.addEventListener("DOMContentLoaded", function() {
                         // 文件上传成功的回调
                         filesProcessed++;
                         if (filesProcessed === totalFiles) {
-                        // 获取服务器返回的文本内容
+                            // 获取服务器返回的文本内容
                             var serverResponse = data;
 
-                        // 替换正在上传的文本内容为服务器返回的文本内容
-                           fileUploadStatus.innerHTML = serverResponse;
+                            // 替换正在上传的文本内容为服务器返回的文本内容
+                            fileUploadStatus.innerHTML = serverResponse;
 
-                        // 在3秒后清空上传状态
+                            // 在3秒后清空上传状态
                             setTimeout(function() {
-                              fileUploadStatus.innerHTML = '';
+                                fileUploadStatus.innerHTML = '';
                             }, 5000);
                             refreshFileList(currentPageNumber); // 显示默认文件页码
                             fileInput.value = '';
@@ -142,6 +142,15 @@ document.addEventListener("DOMContentLoaded", function() {
     // 总页数
     var totalPages = 1; //默认的总共页数，将在后续获取JSON时动态更新
 
+    // 在这里进行全局声明
+    var dPlayerInstance;
+
+    // 构建视频文件URL的函数
+    function getPlayerURL(fileName) {
+        // 假设视频文件都存储在特定目录下，并且服务器地址为“https://example.com/videos/”
+        return "/WHR-HFS-API/Download/" + fileName;
+    }
+
     function refreshFileList(pageNumber) {
         var fileList = document.getElementById("file-list");
         var xhr = new XMLHttpRequest();
@@ -166,6 +175,54 @@ document.addEventListener("DOMContentLoaded", function() {
                         a.href = "/WHR-HFS-API/Download/" + file.name;
                         a.style.display = "block";
                         a.innerHTML = file.name;
+
+                        var fileExtension = file.name.split('.').pop().toLowerCase();
+                        if (["mp4", "webm", "mkv"].includes(fileExtension)) {
+                            var previewButton = document.createElement("button");
+                            previewButton.textContent = "预览";
+                            previewButton.classList.add("btn", "btn-outline-primary", "btn-sm", "preview-button");
+                            previewButton.addEventListener("click", function() {
+                                if (dPlayerInstance) {
+                                    dPlayerInstance.destroy();
+                                }
+                                var playerurl = getPlayerURL(file.name); // 使用 playerurl 函数拼接播放的URL
+                                dPlayerInstance = new DPlayer({
+                                    container: document.getElementById('dplayer'),
+                                    screenshot: true,
+                                    loop: true,
+                                    mutex: true,
+                                    hotkey: true,
+                                    video: {
+                                        url: playerurl
+                                    },
+                                    autoplay: true,
+                                });
+                            });
+
+                            li.appendChild(previewButton);
+                        } else if (["mp3", "wav", "ogg"].includes(fileExtension)) {
+                            var audioPreviewButton = document.createElement("button");
+                            audioPreviewButton.textContent = "预览音频";
+                            audioPreviewButton.classList.add("btn", "btn-outline-primary", "btn-sm", "preview-button");
+                            audioPreviewButton.addEventListener("click", function() {
+                                if (dPlayerInstance) {
+                                    dPlayerInstance.destroy();
+                                }
+                                var playerurl = getPlayerURL(file.name); // 使用 playerurl 函数拼接播放的URL
+                                dPlayerInstance = new DPlayer({
+                                    container: document.getElementById('dplayer'),
+                                    screenshot: true,
+                                    loop: true,
+                                    mutex: true,
+                                    hotkey: true,
+                                    video: {
+                                        url: playerurl
+                                    },
+                                    autoplay: true,
+                                });
+                            });
+                            li.appendChild(audioPreviewButton);
+                        }
 
 
                         if (file.isDirectory === "1") {
@@ -359,6 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
 
 
 // 后台程序启动时间
