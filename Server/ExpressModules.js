@@ -92,6 +92,11 @@ app.get('/chat', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/chat.html'));
 });
 
+// AI-chat室界面
+app.get('/ai-chat', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/ai-chat.html'));
+});
+
 // 管理路由
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/admin.html'));
