@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            WHR - Free AI Chat
+        </title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color:
+            #2c3e50; color: #ecf0f1; display: flex; justify-content: center; /* 居中
+            */ align-items: center; /* 居中 */ height: 100vh; /* 充满视口高度 */ } .container
+            { max-width: 800px; width: 100%; padding: 20px; background-color: #94b1cf;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); border-radius: 10px; } h1 { text-align:
+            center; color: #ffffff; } #chatLog { margin-bottom: 20px; padding: 10px;
+            border: 1px solid #546e7a; border-radius: 5px; background-color: #3e5975;
+            height: 700px; overflow-y: auto; color: #ecf0f1; } #inputText { width:
+            calc(100% - 110px); padding: 10px; border: 1px solid #546e7a; border-radius:
+            5px; margin-right: 10px; font-size: 16px; background-color: #ffffff78;
+            color: #3f4d51; } #sendButton { padding: 10px 20px; background-color: #3498db;
+            color: white; border: none; border-radius: 5px; cursor: pointer; font-size:
+            16px; } #PRO { padding: 5px 5px; color: white; font-size: 16px; text-align:
+            center; } a{ color: #447fa3; } #sendButton:hover { background-color: #50a2d7c7;
+            } /* 媒体查询 - 电脑端 */ @media (min-width: 768px) { body { background-color:
+            #7faedd; } } /* 媒体查询 - 手机端 */ @media (max-width: 767px) { body { display:
+            block; } .container { max-width: 100%; margin: 50px auto 0; } #chatLog
+            { max-height: 380px; /* 适配手机端高度 */ } }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>
+                WHR AI Chat
+            </h1>
+            <div id="chatLog">
+            </div>
+            <input type="text" id="inputText" placeholder="输入您的问题或消息">
+            <button id="sendButton" onclick="sendChat()">
+                发送
+            </button>
+            <div id="PRO">
+                此页面由
+                <a href="https://team.ecylt.top/">
+                    WZH团队
+                </a>
+                提供技术支持
+            </div>
+        </div>
+        <script>
+            function sendChat() {
+    var inputText = document.getElementById("inputText").value;
+
+    // 禁用发送按钮
+    document.getElementById("sendButton").disabled = true;
+
+    // 更改按钮文本为“请求中...”
+    document.getElementById("sendButton").textContent = "Wait";
+
+    var request = {
+        q: inputText
+    };
+
+    fetch('https://aichat-whr-hfs.api.ecylt.top', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(request),
+        })
+        .then(response => response.json())
+        .then(data => {
+            var userQuestion = document.createElement('p');
+            userQuestion.textContent = "用户: " + inputText;
+            document.getElementById("chatLog").appendChild(userQuestion);
+
+            var aiResponse = data.response.response;
+            var aiAnswer = document.createElement('div');
+
+            // 寻找代码块的开始位置
+            var codeStartIndex = aiResponse.indexOf("```");
+            if (codeStartIndex !== -1) {
+                // 将代码块之前的部分显示为普通的<p>元素
+                var textBeforeCode = aiResponse.substring(0, codeStartIndex);
+                var textBeforeCodeElement = document.createElement('p');
+                textBeforeCodeElement.textContent = textBeforeCode;
+                aiAnswer.appendChild(textBeforeCodeElement);
+
+                // 寻找代码块的结束位置
+                var codeEndIndex = aiResponse.indexOf("```", codeStartIndex + 3);
+                if (codeEndIndex !== -1) {
+                    // 获取代码块的内容并显示为<pre>元素
+                    var codeContent = aiResponse.substring(codeStartIndex + 3, codeEndIndex);
+                    var codeElement = document.createElement('pre');
+                    codeElement.textContent = codeContent;
+                    aiAnswer.appendChild(codeElement);
+
+                    // 显示代码块之后的部分为普通的<p>元素
+                    var textAfterCode = aiResponse.substring(codeEndIndex + 3);
+                    var textAfterCodeElement = document.createElement('p');
+                    textAfterCodeElement.textContent = textAfterCode;
+                    aiAnswer.appendChild(textAfterCodeElement);
+                } else {
+                    // 未找到结束代码块，则显示剩余部分为普通的<p>元素
+                    var remainingText = aiResponse.substring(codeStartIndex + 3);
+                    var remainingTextElement = document.createElement('p');
+                    remainingTextElement.textContent = remainingText;
+                    aiAnswer.appendChild(remainingTextElement);
+                }
+            } else {
+                // 文本没有代码块，则直接显示为普通的<p>元素
+                var textElement = document.createElement('p');
+                textElement.textContent = aiResponse;
+                aiAnswer.appendChild(textElement);
+            }
+
+            document.getElementById("chatLog").appendChild(aiAnswer);
+            document.getElementById("inputText").value = "";
+
+            // 恢复发送按钮状态和文本
+            document.getElementById("sendButton").disabled = false;
+            document.getElementById("sendButton").textContent = "发送";
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // 在发生错误时同样恢复发送按钮状态和文本
+            document.getElementById("sendButton").disabled = false;
+            document.getElementById("sendButton").textContent = "发送";
+        });
+}
+        </script>
+    </body>
+
+</html>
